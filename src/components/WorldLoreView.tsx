@@ -649,69 +649,6 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
         </div>
       </section>
 
-      {/* 4. Architectural Philosophy & Cross-tab Navigation */}
-      <section className="world-section">
-        <div className="arch-philosophy-card glass-card">
-          <div className="arch-card-header">
-            <Server size={20} className="text-cyan" />
-            <div>
-              <h2 className="section-title">
-                {language === 'zh' ? '技术架构设计哲学：为什么需要三层解耦闭环？' : 'Architectural Philosophy: Why a 3-Layer Decoupled Loop?'}
-              </h2>
-              <span className="arch-sub font-mono">DATABRICKS LAKEHOUSE ➔ LAKEBASE POSTGRES ➔ CONVEX REACTIVE UI</span>
-            </div>
-          </div>
-
-          <div className="arch-three-columns">
-            <div className="arch-col">
-              <div className="col-header font-mono">
-                <span className="col-num">01</span>
-                <h4>Databricks Lakehouse</h4>
-              </div>
-              <p>
-                {language === 'zh'
-                  ? '处理海量明细数据的批流治理、SCD2 历史拉链与高维分析。通过统一语义层 MEASURE() 严格定义全公司指标，消除跨报表口径不一致。'
-                  : 'Manages massive historical data, SCD2 temporal validity, and metric calculation with MEASURE() to eliminate business drift.'}
-              </p>
-            </div>
-
-            <div className="arch-col">
-              <div className="col-header font-mono">
-                <span className="col-num">02</span>
-                <h4>Databricks Lakebase</h4>
-              </div>
-              <p>
-                {language === 'zh'
-                  ? '托管 Serverless Postgres。利用 Change Data Feed (CDF) 将千万行事实提炼为仅 6 行的极简高可用宽表，为前台 UI 提供微秒至毫秒级点查，闲置自动零缩容。'
-                  : 'Serverless Postgres serving a curated 6-row operational table via Change Data Feed, delivering sub-10ms keyed lookups without expensive warehouse scans.'}
-              </p>
-            </div>
-
-            <div className="arch-col">
-              <div className="col-header font-mono">
-                <span className="col-num">03</span>
-                <h4>Convex 响应式数据总线</h4>
-              </div>
-              <p>
-                {language === 'zh'
-                  ? '全球客户端的长连接 WebSocket 实时广播。支持客户端乐观更新与安全鉴权，为地面调度员提供零闪烁、零延迟的人机协同控制。'
-                  : 'WebSocket reactive edge layer providing optimistic updates, client caching, and instant real-time synchronization across interplanetary dispatchers.'}
-              </p>
-            </div>
-          </div>
-
-          {/* Footer Callout */}
-          <div className="arch-footer-callout font-mono">
-            <Sparkles size={16} className="text-cyan" />
-            <span>
-              {language === 'zh'
-                ? '提示：您可以随时切换上方导航栏，体验真实的 Databricks Apps 原生界面，或深入查看完整的底层 SQL 逻辑与数据血缘！'
-                : 'Tip: Switch tabs anytime to experience the native Databricks Apps interface or inspect complete underlying SQL pipelines!'}
-            </span>
-          </div>
-        </div>
-      </section>
-
       {/* Depot Inspection Modal */}
       {inspectingDepot && (
         <DepotDetailModal
