@@ -400,68 +400,7 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
         </div>
       </section>
 
-      {/* 2. 10 Simulated Upstream Telemetry Streams - TOP PRIORITY SPECIFICATION */}
-      <section className="world-section">
-        <div className="section-title-bar">
-          <div className="title-left">
-            <FileText size={18} className="text-cyan" />
-            <h2 className="section-title">
-              {language === 'zh' ? '模拟系统 10 大上游异构数据流契约全景' : '10 Upstream Simulated Data Feeds Contract Specification'}
-            </h2>
-          </div>
-          <span className="section-tag font-mono">UNITY CATALOG VOLUME // helios_raw.helios_landing</span>
-        </div>
-
-        <div className="streams-intro-card glass-card">
-          <p>
-            {language === 'zh' ? (
-              <>
-                上游业务系统将这 10 个数据流以文件形式投递到 Unity Catalog 的 Landing Volume（<code>/Volumes/helios_ops/helios_landing/</code>）。
-                整个模拟系统包含了 <strong>3 种存储格式（JSON / Parquet / CSV）</strong>、<strong>4 种交付频率</strong>，并真实注入了<strong>网络延迟、乱序迟到行、CDC 状态流转与 SCD2 历史变更</strong>等企业级典型故障：
-              </>
-            ) : (
-              <>
-                Upstream logistics applications deliver these 10 feeds into Unity Catalog Landing Volumes (<code>/Volumes/helios_ops/helios_landing/</code>).
-                The pipeline encompasses <strong>3 file formats (JSON / Parquet / CSV)</strong>, <strong>4 ingestion schedules</strong>, and deliberately injects <strong>network latency, late-arriving records, and CDC state mutations</strong>:
-              </>
-            )}
-          </p>
-        </div>
-
-        <div className="streams-matrix-grid">
-          {dataStreams.map((s, idx) => (
-            <div key={s.id} className="stream-card glass-card">
-              <div className="stream-card-header font-mono">
-                <div className="stream-id-wrap">
-                  <span className="stream-idx">#{String(idx + 1).padStart(2, '0')}</span>
-                  <span className="stream-name text-cyan">{s.name}</span>
-                </div>
-                <span className="stream-format-badge">{s.format}</span>
-              </div>
-
-              <div className="stream-meta-line font-mono">
-                <Clock size={12} className="text-muted" />
-                <span>{s.frequency}</span>
-              </div>
-
-              <div className="stream-body-content">
-                <div className="stream-field">
-                  <span className="field-label">{language === 'zh' ? '业务特征与数据挑战:' : 'Data Characteristics & Anomalies:'}</span>
-                  <p className="field-val">
-                    {language === 'zh' ? s.anomalyZh : language === 'ja' ? s.anomalyJa : s.anomalyEn}
-                  </p>
-                </div>
-                <div className="stream-field">
-                  <span className="field-label">{language === 'zh' ? 'Medallion 奖牌层治理策略:' : 'Medallion Lakehouse Strategy:'}</span>
-                  <p className="field-val font-mono text-cyan-light">{s.medallionHandling}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 3. Interactive Planetary Radar & 6 Celestial Depots */}
+      {/* 2. Interactive Planetary Radar & 6 Celestial Depots */}
       <section className="world-section">
         <div className="section-title-bar">
           <div className="title-left">
@@ -683,7 +622,68 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
         </div>
       </section>
 
-      {/* 3. Critical Incident Dossier: Mars Ares Depot Batch 3 Margin Crisis */}
+      {/* 3. 10 Simulated Upstream Telemetry Streams Specification */}
+      <section className="world-section">
+        <div className="section-title-bar">
+          <div className="title-left">
+            <FileText size={18} className="text-cyan" />
+            <h2 className="section-title">
+              {language === 'zh' ? '模拟系统 10 大上游异构数据流契约全景' : '10 Upstream Simulated Data Feeds Contract Specification'}
+            </h2>
+          </div>
+          <span className="section-tag font-mono">UNITY CATALOG VOLUME // helios_raw.helios_landing</span>
+        </div>
+
+        <div className="streams-intro-card glass-card">
+          <p>
+            {language === 'zh' ? (
+              <>
+                上游业务系统将这 10 个数据流以文件形式投递到 Unity Catalog 的 Landing Volume（<code>/Volumes/helios_ops/helios_landing/</code>）。
+                整个模拟系统包含了 <strong>3 种存储格式（JSON / Parquet / CSV）</strong>、<strong>4 种交付频率</strong>，并真实注入了<strong>网络延迟、乱序迟到行、CDC 状态流转与 SCD2 历史变更</strong>等企业级典型故障：
+              </>
+            ) : (
+              <>
+                Upstream logistics applications deliver these 10 feeds into Unity Catalog Landing Volumes (<code>/Volumes/helios_ops/helios_landing/</code>).
+                The pipeline encompasses <strong>3 file formats (JSON / Parquet / CSV)</strong>, <strong>4 ingestion schedules</strong>, and deliberately injects <strong>network latency, late-arriving records, and CDC state mutations</strong>:
+              </>
+            )}
+          </p>
+        </div>
+
+        <div className="streams-matrix-grid">
+          {dataStreams.map((s, idx) => (
+            <div key={s.id} className="stream-card glass-card">
+              <div className="stream-card-header font-mono">
+                <div className="stream-id-wrap">
+                  <span className="stream-idx">#{String(idx + 1).padStart(2, '0')}</span>
+                  <span className="stream-name text-cyan">{s.name}</span>
+                </div>
+                <span className="stream-format-badge">{s.format}</span>
+              </div>
+
+              <div className="stream-meta-line font-mono">
+                <Clock size={12} className="text-muted" />
+                <span>{s.frequency}</span>
+              </div>
+
+              <div className="stream-body-content">
+                <div className="stream-field">
+                  <span className="field-label">{language === 'zh' ? '业务特征与数据挑战:' : 'Data Characteristics & Anomalies:'}</span>
+                  <p className="field-val">
+                    {language === 'zh' ? s.anomalyZh : language === 'ja' ? s.anomalyJa : s.anomalyEn}
+                  </p>
+                </div>
+                <div className="stream-field">
+                  <span className="field-label">{language === 'zh' ? 'Medallion 奖牌层治理策略:' : 'Medallion Lakehouse Strategy:'}</span>
+                  <p className="field-val font-mono text-cyan-light">{s.medallionHandling}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. Critical Incident Dossier: Mars Ares Depot Batch 3 Margin Crisis */}
       <section className="world-section">
         <div className="incident-dossier-panel glass-card">
           <div className="incident-dossier-header">
