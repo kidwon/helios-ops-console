@@ -10,6 +10,7 @@ import { OperationsLog } from './components/OperationsLog';
 import { DepotDetailModal } from './components/DepotDetailModal';
 import { DevControlHUD } from './components/DevControlHUD';
 import { DataLineageExplorer } from './components/DataLineageExplorer';
+import { Chapter6AppView } from './components/Chapter6AppView';
 import type { DepotRecord } from './types/helios';
 import { formatCredits, formatNumber, formatPercent } from './utils/formatters';
 import { 
@@ -24,7 +25,7 @@ export function App() {
   const { summary, selectedDepot, setSelectedDepot, t } = useHeliosData();
   const [isDevPanelOpen, setIsDevPanelOpen] = useState<boolean>(false);
   const [rebalanceTarget, setRebalanceTarget] = useState<DepotRecord | null>(null);
-  const [currentView, setCurrentView] = useState<'console' | 'lineage'>('lineage');
+  const [currentView, setCurrentView] = useState<'chapter6' | 'console' | 'lineage'>('chapter6');
 
   const handleOpenRebalance = (depot: DepotRecord) => {
     setRebalanceTarget(depot);
@@ -47,7 +48,11 @@ export function App() {
         onViewChange={setCurrentView}
       />
 
-      {currentView === 'lineage' ? (
+      {currentView === 'chapter6' ? (
+        <main className="helios-dashboard-container">
+          <Chapter6AppView />
+        </main>
+      ) : currentView === 'lineage' ? (
         <main className="helios-dashboard-container">
           <DataLineageExplorer />
         </main>

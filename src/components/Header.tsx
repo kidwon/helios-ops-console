@@ -13,14 +13,15 @@ import {
   Activity,
   Globe,
   LayoutDashboard,
-  Layers
+  Layers,
+  Cpu
 } from 'lucide-react';
 
 interface HeaderProps {
   onToggleDevPanel: () => void;
   isDevPanelOpen: boolean;
-  currentView?: 'console' | 'lineage';
-  onViewChange?: (view: 'console' | 'lineage') => void;
+  currentView?: 'chapter6' | 'console' | 'lineage';
+  onViewChange?: (view: 'chapter6' | 'console' | 'lineage') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
@@ -99,9 +100,21 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* View Switcher: Operations Console vs Data Lineage Provenance */}
+        {/* View Switcher: Chapter 6 App vs Operations Console vs Data Lineage Provenance */}
         {onViewChange && (
           <div className="view-mode-tabs" role="tablist">
+            <button
+              type="button"
+              className={`view-tab-btn ${currentView === 'chapter6' ? 'active' : ''}`}
+              onClick={() => { playUiSound('beep'); onViewChange('chapter6'); }}
+              role="tab"
+              aria-selected={currentView === 'chapter6'}
+              id="tab-chapter6"
+              title="Chapter 6 Databricks Apps / Streamlit Console"
+            >
+              <Cpu size={13} />
+              <span>{t.navChapter6}</span>
+            </button>
             <button
               type="button"
               className={`view-tab-btn ${currentView === 'console' ? 'active' : ''}`}

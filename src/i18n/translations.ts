@@ -18,6 +18,7 @@ export interface TranslationDict {
   syncedJustNow: string;
   secAgo: string;
   minAgo: string;
+  navChapter6: string;
   navConsole: string;
   navLineage: string;
   sourceTooltip: string;
@@ -172,6 +173,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     syncedJustNow: '刚刚同步',
     secAgo: '秒前同步',
     minAgo: '分钟前同步',
+    navChapter6: '第6章 原版应用',
     navConsole: '实时运营大屏',
     navLineage: '数据由来与血缘',
     sourceTooltip: '源自 Databricks Lakebase 权威表',
@@ -325,6 +327,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     syncedJustNow: 'Just synced',
     secAgo: 's ago',
     minAgo: 'm ago',
+    navChapter6: 'Section 6 App',
     navConsole: 'Operations Console',
     navLineage: 'Data Lineage & Provenance',
     sourceTooltip: 'Sourced from Databricks Lakebase Postgres',
@@ -478,6 +481,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     syncedJustNow: 'たった今同期',
     secAgo: '秒前',
     minAgo: '分前',
+    navChapter6: '第6章 原版アプリ',
     navConsole: 'リアルタイム運用',
     navLineage: 'データリネージ由来',
     sourceTooltip: 'Databricks Lakebase 信頼データソース準拠',

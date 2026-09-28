@@ -2165,3 +2165,416 @@ html, body {
     padding: 6px 8px;
   }
 }
+
+/* ==========================================================================
+   CHAPTER 6 APP VIEW - DATABRICKS APPS / STREAMLIT RUNTIME EMULATION
+   ========================================================================== */
+.chapter6-app-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Databricks Apps Environment Banner */
+.databricks-app-banner {
+  background: linear-gradient(90deg, #0d1527 0%, #131f37 60%, #0d1527 100%);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.banner-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.databricks-logo-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.db-brick {
+  font-size: 15px;
+  filter: drop-shadow(0 0 6px rgba(255, 54, 33, 0.6));
+}
+
+.db-title {
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: #f1f5f9;
+}
+
+.app-resource-tag,
+.app-table-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  color: var(--cyan);
+}
+
+.banner-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.connection-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #a7f3d0;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.streamlit-refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f1f5f9;
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.streamlit-refresh-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+/* Main Streamlit Surface */
+.streamlit-surface {
+  background: #0b111e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  padding: 28px 36px;
+}
+
+.st-header-block {
+  margin-bottom: 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 16px;
+}
+
+.st-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px 0;
+  letter-spacing: -0.3px;
+}
+
+.st-emoji {
+  font-size: 26px;
+}
+
+.st-caption {
+  font-size: 13.5px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Streamlit Selectbox Widget */
+.st-widget-block {
+  margin-bottom: 22px;
+}
+
+.st-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+
+.st-select-wrapper {
+  position: relative;
+  max-width: 520px;
+}
+
+.st-selectbox {
+  width: 100%;
+  appearance: none;
+  background: #111a2c;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #f8fafc;
+  font-size: 13.5px;
+  padding: 9px 36px 9px 12px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.st-selectbox:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.15);
+}
+
+.st-select-wrapper::after {
+  content: '▼';
+  font-size: 10px;
+  color: #94a3b8;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* Ares Batch 3 Warning Callout */
+.st-warning-callout {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-left: 4px solid var(--solar);
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.callout-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #fde68a;
+}
+
+/* st.subheader */
+.st-subheader-block {
+  margin-top: 24px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 8px;
+}
+
+.st-subheader {
+  font-size: 19px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+.st-table-caption {
+  font-size: 11px;
+  color: var(--cyan);
+  background: rgba(0, 229, 255, 0.06);
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.18);
+}
+
+/* st.columns(4) Metric Cards Grid */
+.st-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.st-metric-card {
+  background: #111a2c;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.st-metric-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 229, 255, 0.3);
+}
+
+.st-metric-label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.st-metric-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: -0.5px;
+}
+
+/* st.dataframe container */
+.st-dataframe-container {
+  background: #101726;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.st-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.st-dataframe {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.st-dataframe thead th {
+  background: #0d1422;
+  color: #94a3b8;
+  padding: 10px 14px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: lowercase;
+}
+
+.st-dataframe tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #cbd5e1;
+}
+
+.st-dataframe tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.st-dataframe tbody tr.st-row-selected {
+  background: rgba(0, 229, 255, 0.08);
+  border-left: 3px solid var(--cyan);
+}
+
+.st-dataframe tbody tr.st-row-incident {
+  background: rgba(245, 158, 11, 0.05);
+}
+
+/* Code Inspector Disclosure */
+.st-code-disclosure {
+  margin-top: 18px;
+}
+
+.st-details {
+  background: #0d1422;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.st-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #cbd5e1;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(255, 255, 255, 0.02);
+  transition: background 0.2s;
+}
+
+.st-summary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--cyan);
+}
+
+.st-code-box {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: #080c14;
+  overflow-x: auto;
+}
+
+.st-code-box pre {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: #93c5fd;
+}
+
+/* Responsive adjustments for Chapter 6 App view */
+@media (max-width: 1024px) {
+  .st-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .streamlit-surface {
+    padding: 18px 16px;
+  }
+
+  .st-title {
+    font-size: 22px;
+  }
+
+  .st-subheader {
+    font-size: 17px;
+  }
+
+  .databricks-app-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .banner-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .st-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .st-metric-value {
+    font-size: 22px;
+  }
+}
+

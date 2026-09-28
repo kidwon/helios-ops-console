@@ -1,0 +1,333 @@
+import React, { useState } from 'react';
+import { useHeliosData } from '../context/HeliosDataContext';
+import type { DepotRecord } from '../types/helios';
+import { 
+  Database, 
+  ExternalLink, 
+  Layers, 
+  CheckCircle2, 
+  AlertTriangle,
+  Server,
+  ArrowRight,
+  Terminal,
+  ShieldCheck,
+  RefreshCw
+} from 'lucide-react';
+
+export const Chapter6AppView: React.FC = () => {
+  const { depots, triggerLakebaseSync, language, t } = useHeliosData();
+  const [selectedDepotName, setSelectedDepotName] = useState<string>('Ares Depot');
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+
+  const selectedDepot = depots.find(d => d.depot === selectedDepotName) || depots[0];
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await triggerLakebaseSync('CHAPTER_6_APP_REFRESH');
+    setTimeout(() => setIsRefreshing(false), 600);
+  };
+
+  const isAresIncident = selectedDepot.depot === 'Ares Depot';
+
+  return (
+    <div className="chapter6-app-container" id="chapter6-app-view">
+      {/* Databricks Apps Environment Banner */}
+      <div className="databricks-app-banner">
+        <div className="banner-left">
+          <div className="databricks-logo-badge">
+            <span className="db-brick">🧱</span>
+            <span className="db-title">Databricks Apps // Streamlit Runtime</span>
+          </div>
+          <span className="app-resource-tag font-mono">Resource: lakebase-postgres (helios-ops)</span>
+          <span className="app-table-tag font-mono">Table: public.depot_ops_summary</span>
+        </div>
+        <div className="banner-right">
+          <div className="connection-pill font-mono">
+            <ShieldCheck size={13} className="text-emerald" />
+            <span>OAuth Connection (psycopg pool · Token recycle &lt; 3000s)</span>
+          </div>
+          <button 
+            type="button"
+            className={`streamlit-refresh-btn ${isRefreshing ? 'spinning' : ''}`}
+            onClick={handleRefresh}
+            title="Re-run query against Lakebase Postgres"
+          >
+            <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
+            <span>{isRefreshing ? 'Querying Lakebase...' : 'Rerun'}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Main Streamlit App Emulation Surface */}
+      <div className="streamlit-surface">
+        {/* st.title & st.caption */}
+        <div className="st-header-block">
+          <h1 className="st-title">
+            <span className="st-emoji">🛰️</span> Helios Depot Operations Console
+          </h1>
+          <p className="st-caption">
+            {language === 'zh'
+              ? '源自 Lakebase 的实时仓库运营视图。数据与第 5 章统一语义层严格对齐。'
+              : language === 'ja'
+              ? 'Lakebase から提供されるリアルタイム拠点ビュー。数値はセクション 5 のセマンティック層と完全に一致します。'
+              : 'Live depot view served from Lakebase. Figures match the Section 5 semantic layer.'}
+          </p>
+        </div>
+
+        {/* st.selectbox("Depot", summary["depot"].tolist()) */}
+        <div className="st-widget-block">
+          <label className="st-label" htmlFor="depot-selectbox">
+            {language === 'zh' ? '选择仓库 (Depot)' : language === 'ja' ? '拠点選択 (Depot)' : 'Depot'}
+          </label>
+          <div className="st-select-wrapper">
+            <select
+              id="depot-selectbox"
+              className="st-selectbox font-mono"
+              value={selectedDepotName}
+              onChange={(e) => setSelectedDepotName(e.target.value)}
+            >
+              {depots.map(d => (
+                <option key={d.warehouse_id} value={d.depot}>
+                  {d.depot} ({d.warehouse_id}) — {d.depot_body} [{d.depot_region}]
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Ares Batch 3 incident contextual callout */}
+        {isAresIncident && (
+          <div className="st-warning-callout">
+            <AlertTriangle size={18} className="text-solar" />
+            <div className="callout-content">
+              <strong>
+                {language === 'zh' ? '注意：Ares Depot（火星）批次 3 瑕疵件异常' : 'Notice: Ares Depot Batch 3 Component Defect Drag'}
+              </strong>
+              <span>
+                {language === 'zh'
+                  ? '火星仓库由于批次 3（Batch 3）的高返工成本事件，导致毛利率下降至 31.9%（低于 38.0% 健康线）。此数据直接映射自 Section 5 sales_mv 与 Lakebase public.depot_ops_summary。'
+                  : 'Ares Depot margin is dragged down to 31.9% by the batch three defective component incident, as reflected in the Section 5 semantic layer.'}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* st.subheader(f"{row['depot']} ({row['warehouse_id']}, {row['depot_body']}, {row['depot_region']})") */}
+        <div className="st-subheader-block">
+          <h2 className="st-subheader font-mono">
+            {selectedDepot.depot} ({selectedDepot.warehouse_id}, {selectedDepot.depot_body}, {selectedDepot.depot_region})
+          </h2>
+        </div>
+
+        {/* st.columns(4) - Top Row */}
+        <div className="st-metrics-grid">
+          <div className="st-metric-card">
+            <div className="st-metric-label">Revenue (CREDITS)</div>
+            <div className="st-metric-value text-emerald font-mono">
+              {Number(selectedDepot.revenue).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+            </div>
+          </div>
+
+          <div className="st-metric-card">
+            <div className="st-metric-label">Gross margin rate</div>
+            <div className={`st-metric-value font-mono ${isAresIncident ? 'text-solar' : 'text-emerald'}`}>
+              {(selectedDepot.gross_margin_rate * 100).toFixed(1)}%
+            </div>
+          </div>
+
+          <div className="st-metric-card">
+            <div className="st-metric-label">Orders</div>
+            <div className="st-metric-value font-mono">
+              {selectedDepot.orders.toLocaleString()}
+            </div>
+          </div>
+
+          <div className="st-metric-card">
+            <div className="st-metric-label">Cancellation rate</div>
+            <div className="st-metric-value font-mono text-cyan">
+              {(selectedDepot.cancellation_rate * 100).toFixed(2)}%
+            </div>
+          </div>
+        </div>
+
+        {/* st.columns(4) - Bottom Row */}
+        <div className="st-metrics-grid">
+          <div className="st-metric-card">
+            <div className="st-metric-label">On time rate</div>
+            <div className="st-metric-value font-mono text-emerald">
+              {(selectedDepot.on_time_rate * 100).toFixed(1)}%
+            </div>
+          </div>
+
+          <div className="st-metric-card">
+            <div className="st-metric-label">Backordered orders</div>
+            <div className="st-metric-value font-mono">
+              {selectedDepot.backordered_orders.toLocaleString()}
+            </div>
+          </div>
+
+          <div className="st-metric-card">
+            <div className="st-metric-label">Stockout events</div>
+            <div className={`st-metric-value font-mono ${selectedDepot.stockout_events > 40 ? 'text-crimson' : ''}`}>
+              {selectedDepot.stockout_events.toLocaleString()}
+            </div>
+          </div>
+
+          <div className="st-metric-card">
+            <div className="st-metric-label">Units shipped</div>
+            <div className="st-metric-value font-mono">
+              {selectedDepot.units_out.toLocaleString()}
+            </div>
+          </div>
+        </div>
+
+        {/* st.subheader("All depots") */}
+        <div className="st-subheader-block">
+          <h2 className="st-subheader">
+            {language === 'zh' ? '全部仓库汇总 (All depots)' : language === 'ja' ? '全拠点一覧 (All depots)' : 'All depots'}
+          </h2>
+          <span className="st-table-caption font-mono">
+            `SELECT * FROM public.depot_ops_summary ORDER BY revenue DESC` (6 rows)
+          </span>
+        </div>
+
+        {/* st.dataframe(summary, use_container_width=True, hide_index=True) */}
+        <div className="st-dataframe-container">
+          <div className="st-table-wrapper">
+            <table className="st-dataframe font-mono">
+              <thead>
+                <tr>
+                  <th>warehouse_id</th>
+                  <th>depot</th>
+                  <th>depot_region</th>
+                  <th>depot_body</th>
+                  <th className="text-right">revenue</th>
+                  <th className="text-right">gross_margin</th>
+                  <th className="text-right">gross_margin_rate</th>
+                  <th className="text-right">units_sold</th>
+                  <th className="text-right">orders</th>
+                  <th className="text-right">cancellation_rate</th>
+                  <th className="text-right">on_time_rate</th>
+                  <th className="text-right">backordered_orders</th>
+                  <th className="text-right">stockout_events</th>
+                  <th className="text-right">units_out</th>
+                </tr>
+              </thead>
+              <tbody>
+                {depots.map(row => {
+                  const isSelected = row.depot === selectedDepotName;
+                  const isRowAres = row.depot === 'Ares Depot';
+                  return (
+                    <tr 
+                      key={row.warehouse_id} 
+                      className={`${isSelected ? 'st-row-selected' : ''} ${isRowAres ? 'st-row-incident' : ''}`}
+                      onClick={() => setSelectedDepotName(row.depot)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <td className="text-cyan font-bold">{row.warehouse_id}</td>
+                      <td className="font-bold">{row.depot}</td>
+                      <td>{row.depot_region}</td>
+                      <td>{row.depot_body}</td>
+                      <td className="text-right">{Number(row.revenue).toFixed(2)}</td>
+                      <td className="text-right">{Number(row.gross_margin).toFixed(2)}</td>
+                      <td className={`text-right ${isRowAres ? 'text-solar font-bold' : ''}`}>
+                        {Number(row.gross_margin_rate).toFixed(3)}
+                      </td>
+                      <td className="text-right">{row.units_sold}</td>
+                      <td className="text-right">{row.orders}</td>
+                      <td className="text-right">{Number(row.cancellation_rate).toFixed(3)}</td>
+                      <td className="text-right">{Number(row.on_time_rate).toFixed(3)}</td>
+                      <td className="text-right">{row.backordered_orders}</td>
+                      <td className="text-right">{row.stockout_events}</td>
+                      <td className="text-right">{row.units_out}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Python Source Code Inspector Accordion */}
+        <div className="st-code-disclosure">
+          <details className="st-details">
+            <summary className="st-summary font-mono">
+              <Terminal size={14} className="text-cyan" />
+              <span>{language === 'zh' ? '查看第 6 章原版 app.py 生产代码 (Click to inspect app.py)' : 'Inspect Section 6 app.py Source Code'}</span>
+            </summary>
+            <div className="st-code-box">
+              <pre className="font-mono">
+                <code>{`# The Data Engineering Simulator / 06_lakebase_app/app/app.py
+import os
+import pandas as pd
+import psycopg
+import streamlit as st
+from psycopg_pool import ConnectionPool
+from databricks.sdk import WorkspaceClient
+
+SUMMARY_TABLE = os.environ.get("SUMMARY_TABLE", "public.depot_ops_summary")
+st.set_page_config(page_title="Helios Depot Operations Console", page_icon="🛰️", layout="wide")
+workspace = WorkspaceClient()
+
+class OAuthConnection(psycopg.Connection):
+    @classmethod
+    def connect(cls, conninfo="", **kwargs):
+        token = workspace.postgres.generate_database_credential(
+            endpoint=os.environ["ENDPOINT_NAME"]
+        ).token
+        kwargs["password"] = token
+        return super().connect(conninfo, **kwargs)
+
+@st.cache_resource
+def get_pool():
+    user = os.environ.get("PGUSER") or os.environ["DATABRICKS_CLIENT_ID"]
+    conninfo = (
+        f"host={os.environ['PGHOST']} port={os.environ.get('PGPORT', '5432')} "
+        f"dbname={os.environ.get('PGDATABASE', 'databricks_postgres')} "
+        f"user={user} sslmode={os.environ.get('PGSSLMODE', 'require')}"
+    )
+    return ConnectionPool(
+        conninfo=conninfo,
+        connection_class=OAuthConnection,
+        min_size=1, max_size=5, max_lifetime=3000, open=True,
+    )
+
+def query(sql, params=None):
+    with get_pool().connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(sql, params or ())
+            columns = [c.name for c in cur.description]
+            rows = cur.fetchall()
+    return pd.DataFrame(rows, columns=columns)
+
+st.title("🛰️ Helios Depot Operations Console")
+st.caption("Live depot view served from Lakebase. Figures match the Section 5 semantic layer.")
+
+summary = query(f"SELECT * FROM {SUMMARY_TABLE} ORDER BY revenue DESC")
+depot = st.selectbox("Depot", summary["depot"].tolist())
+row = summary[summary["depot"] == depot].iloc[0]
+
+st.subheader(f"{row['depot']}  ({row['warehouse_id']}, {row['depot_body']}, {row['depot_region']})")
+
+top = st.columns(4)
+top[0].metric("Revenue (CREDITS)", f"{float(row['revenue']):,.0f}")
+top[1].metric("Gross margin rate", f"{float(row['gross_margin_rate']):.1%}")
+top[2].metric("Orders", f"{int(row['orders']):,}")
+top[3].metric("Cancellation rate", f"{float(row['cancellation_rate']):.2%}")
+
+bottom = st.columns(4)
+bottom[0].metric("On time rate", f"{float(row['on_time_rate']):.1%}")
+bottom[1].metric("Backordered orders", f"{int(row['backordered_orders']):,}")
+bottom[2].metric("Stockout events", f"{int(row['stockout_events']):,}")
+bottom[3].metric("Units shipped", f"{int(row['units_out']):,}")
+
+st.subheader("All depots")
+st.dataframe(summary, use_container_width=True, hide_index=True)`}</code>
+              </pre>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  );
+};
