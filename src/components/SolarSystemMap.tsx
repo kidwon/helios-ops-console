@@ -51,18 +51,24 @@ export const SolarSystemMap: React.FC = () => {
 
         {/* Region Filter Buttons */}
         <div className="region-filter-tabs">
-          {(['ALL', 'INNER', 'BELT', 'OUTER'] as (DepotRegion | 'ALL')[]).map((region) => (
-            <button
-              key={region}
-              className={`filter-tab ${activeRegionFilter === region ? 'active' : ''}`}
-              onClick={() => {
-                playUiSound('beep');
-                setActiveRegionFilter(region);
-              }}
-            >
-              {regionLabels[region]}
-            </button>
-          ))}
+          {(['ALL', 'INNER', 'BELT', 'OUTER'] as (DepotRegion | 'ALL')[]).map((region) => {
+            const count = region === 'ALL'
+              ? depots.length
+              : depots.filter(d => d.depot_region === region).length;
+            return (
+              <button
+                key={region}
+                className={`filter-tab ${activeRegionFilter === region ? 'active' : ''}`}
+                onClick={() => {
+                  playUiSound('beep');
+                  setActiveRegionFilter(region);
+                }}
+              >
+                <span>{regionLabels[region]}</span>
+                <span className="filter-count">({count})</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -97,20 +103,31 @@ export const SolarSystemMap: React.FC = () => {
             SOL
           </text>
 
-          {/* Planetary Orbital Paths */}
-          {[110, 175, 240, 310, 380].map((radius, idx) => (
-            <ellipse
-              key={idx}
-              cx="120"
-              cy="200"
-              rx={radius}
-              ry={radius * 0.72}
-              fill="none"
-              stroke="rgba(0, 242, 255, 0.14)"
-              strokeDasharray={idx === 2 ? '4 4' : '2 6'}
-              strokeWidth={idx === 2 ? '1.5' : '1'}
-            />
-          ))}
+          {/* Planetary Orbital Paths with Active Filter Highlighting */}
+          {[110, 175, 240, 310, 380].map((radius, idx) => {
+            const isInner = idx <= 1;
+            const isBelt = idx === 2;
+            const isOuter = idx >= 3;
+            const isOrbActive = activeRegionFilter === 'ALL' ||
+              (activeRegionFilter === 'INNER' && isInner) ||
+              (activeRegionFilter === 'BELT' && isBelt) ||
+              (activeRegionFilter === 'OUTER' && isOuter);
+
+            return (
+              <ellipse
+                key={idx}
+                cx="120"
+                cy="200"
+                rx={radius}
+                ry={radius * 0.72}
+                fill="none"
+                stroke={isOrbActive ? (activeRegionFilter !== 'ALL' ? '#00f2ff' : 'rgba(0, 242, 255, 0.16)') : 'rgba(255, 255, 255, 0.03)'}
+                strokeDasharray={idx === 2 ? '4 4' : '2 6'}
+                strokeWidth={isOrbActive && activeRegionFilter !== 'ALL' ? 1.75 : idx === 2 ? 1.5 : 1}
+                style={{ transition: 'all 0.3s ease' }}
+              />
+            );
+          })}
 
           {/* Asteroid Belt Particle Ring */}
           <ellipse
@@ -119,9 +136,10 @@ export const SolarSystemMap: React.FC = () => {
             rx="240"
             ry="172"
             fill="none"
-            stroke="rgba(255, 176, 32, 0.18)"
+            stroke={activeRegionFilter === 'BELT' ? '#ffb020' : activeRegionFilter === 'ALL' ? 'rgba(255, 176, 32, 0.18)' : 'rgba(255, 176, 32, 0.04)'}
             strokeDasharray="1 8"
-            strokeWidth="8"
+            strokeWidth={activeRegionFilter === 'BELT' ? 12 : 8}
+            style={{ transition: 'all 0.3s ease' }}
           />
 
           {/* Depot Nodes */}
@@ -130,6 +148,7 @@ export const SolarSystemMap: React.FC = () => {
             const isSelected = selectedDepot?.warehouse_id === depot.warehouse_id;
             const isHovered = hoveredDepot?.warehouse_id === depot.warehouse_id;
             const isDimmed = activeRegionFilter !== 'ALL' && depot.depot_region !== activeRegionFilter;
+            const isMatchedFilter = activeRegionFilter !== 'ALL' && depot.depot_region === activeRegionFilter;
 
             const isWarning = depot.status_alert === 'WARNING';
             const isCritical = depot.status_alert === 'CRITICAL';
@@ -138,12 +157,26 @@ export const SolarSystemMap: React.FC = () => {
             return (
               <g
                 key={depot.warehouse_id}
-                className={`depot-node ${isSelected ? 'selected' : ''} ${isDimmed ? 'dimmed' : ''}`}
-                onClick={() => handleSelect(depot)}
-                onMouseEnter={() => setHoveredDepot(depot)}
+                className={`depot-node ${isSelected ? 'selected' : ''} ${isDimmed ? 'dimmed' : ''} ${isMatchedFilter ? 'matched-filter' : ''}`}
+                onClick={() => !isDimmed && handleSelect(depot)}
+                onMouseEnter={() => !isDimmed && setHoveredDepot(depot)}
                 onMouseLeave={() => setHoveredDepot(null)}
-                style={{ cursor: 'pointer', transition: 'all 0.3s ease' }}
+                style={{ 
+                  cursor: isDimmed ? 'default' : 'pointer',
+                  opacity: isDimmed ? 0.14 : 1,
+                  transition: 'opacity 0.25s ease'
+                }}
               >
+                {/* Large stable transparent hit area preventing jitter on mouse movement */}
+                <circle
+                  cx={coord.x}
+                  cy={coord.y}
+                  r={30}
+                  fill="transparent"
+                  stroke="transparent"
+                  style={{ pointerEvents: isDimmed ? 'none' : 'all' }}
+                />
+
                 {/* Orbital telemetry connecting ray */}
                 <line
                   x1="120"
@@ -151,20 +184,37 @@ export const SolarSystemMap: React.FC = () => {
                   x2={coord.x}
                   y2={coord.y}
                   stroke={nodeColor}
-                  strokeOpacity={isSelected ? 0.45 : isHovered ? 0.3 : 0.08}
+                  strokeOpacity={isDimmed ? 0.02 : isSelected ? 0.5 : isHovered ? 0.35 : 0.12}
                   strokeDasharray="2 4"
+                  style={{ pointerEvents: 'none' }}
                 />
 
                 {/* Outer animated radar pulse ring */}
                 <circle
                   cx={coord.x}
                   cy={coord.y}
-                  r={isSelected ? 24 : 16}
+                  r={isSelected ? 24 : isHovered ? 20 : 16}
                   fill="none"
                   stroke={nodeColor}
-                  strokeOpacity="0.4"
+                  strokeOpacity={isHovered ? 0.8 : 0.4}
                   className="pulse-ring"
+                  style={{ pointerEvents: 'none', transition: 'all 0.2s ease' }}
                 />
+
+                {/* Matched Filter Highlight Ring */}
+                {isMatchedFilter && (
+                  <circle
+                    cx={coord.x}
+                    cy={coord.y}
+                    r={22}
+                    fill="none"
+                    stroke="#00f2ff"
+                    strokeWidth={1.5}
+                    strokeDasharray="3 3"
+                    strokeOpacity={0.8}
+                    style={{ pointerEvents: 'none' }}
+                  />
+                )}
 
                 {/* Selection target reticle */}
                 {isSelected && (
@@ -176,6 +226,7 @@ export const SolarSystemMap: React.FC = () => {
                     stroke="#ffffff"
                     strokeDasharray="4 2"
                     strokeWidth="1.5"
+                    style={{ pointerEvents: 'none' }}
                   />
                 )}
 
@@ -183,9 +234,11 @@ export const SolarSystemMap: React.FC = () => {
                 <circle
                   cx={coord.x}
                   cy={coord.y}
-                  r={isSelected ? 7 : 5}
+                  r={isSelected ? 7 : isHovered ? 6.5 : 5}
                   fill={nodeColor}
                   filter="url(#glowEffect)"
+                  className="core-node"
+                  style={{ pointerEvents: 'none', transition: 'r 0.15s ease' }}
                 />
 
                 {/* Depot label */}
@@ -193,10 +246,11 @@ export const SolarSystemMap: React.FC = () => {
                   x={coord.x}
                   y={coord.y - 12}
                   textAnchor="middle"
-                  fill={isSelected ? '#ffffff' : '#e2e8f0'}
+                  fill={isSelected ? '#ffffff' : isMatchedFilter ? '#00f2ff' : '#e2e8f0'}
                   fontSize="10"
                   fontWeight="600"
                   fontFamily="Inter, sans-serif"
+                  style={{ pointerEvents: 'none', userSelect: 'none' }}
                 >
                   {depot.depot}
                 </text>
@@ -206,9 +260,10 @@ export const SolarSystemMap: React.FC = () => {
                   x={coord.x}
                   y={coord.y + 18}
                   textAnchor="middle"
-                  fill="#94a3b8"
+                  fill={isMatchedFilter ? '#93c5fd' : '#94a3b8'}
                   fontSize="8"
                   fontFamily="JetBrains Mono, monospace"
+                  style={{ pointerEvents: 'none', userSelect: 'none' }}
                 >
                   {depot.warehouse_id} &bull; {formatPercent(depot.gross_margin_rate)}
                 </text>
@@ -218,7 +273,7 @@ export const SolarSystemMap: React.FC = () => {
         </svg>
 
         {/* Floating Quick Telemetry Tooltip when hovered */}
-        {hoveredDepot && (
+        {hoveredDepot && activeRegionFilter !== 'ALL' && hoveredDepot.depot_region !== activeRegionFilter ? null : hoveredDepot && (
           <div
             className="radar-hover-card glass-card"
             style={{

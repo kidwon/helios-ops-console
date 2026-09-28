@@ -616,17 +616,32 @@ html, body {
   padding: 4px 10px;
   border-radius: 4px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   transition: all 0.15s;
 }
 
 .filter-tab:hover {
   color: #fff;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .filter-tab.active {
   background: #162032;
-  color: var(--cyan-neon);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.15);
+}
+
+.filter-count {
+  font-size: 9.5px;
+  opacity: 0.65;
+}
+
+.filter-tab.active .filter-count {
+  opacity: 1;
+  color: var(--cyan);
 }
 
 .radar-viewport {
@@ -649,13 +664,28 @@ html, body {
   stroke-dasharray: 4 4;
 }
 
+/* Depot Node in SVG - NO transform: scale() to prevent jittering */
 .depot-node {
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: opacity 0.25s ease;
 }
 
-.depot-node:hover {
-  transform: scale(1.15);
+.depot-node.dimmed {
+  opacity: 0.14 !important;
+  pointer-events: none !important;
+}
+
+.depot-node:hover .pulse-ring {
+  stroke-opacity: 0.85;
+  stroke-width: 2px;
+}
+
+.depot-node:hover .core-node {
+  filter: drop-shadow(0 0 10px #00f2ff);
+}
+
+.depot-node.matched-filter .core-node {
+  filter: drop-shadow(0 0 12px #00f2ff);
 }
 
 .depot-node-outer {
@@ -675,16 +705,63 @@ html, body {
   pointer-events: none;
 }
 
-.radar-tooltip-overlay {
+/* Floating Quick Telemetry Tooltip when hovered */
+.radar-hover-card {
   position: absolute;
-  bottom: 12px;
-  right: 14px;
-  background: rgba(13, 20, 36, 0.95);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  border-radius: 6px;
+  pointer-events: none; /* CRITICAL: prevents tooltip from stealing mouse events and causing jitter loop */
+  z-index: 50;
+  transform: translate(-50%, -132%);
+  min-width: 220px;
   padding: 10px 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  pointer-events: none;
+  border-radius: 6px;
+  background: rgba(9, 15, 27, 0.96);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75), 0 0 12px rgba(0, 229, 255, 0.15);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.15s ease-out;
+}
+
+.radar-hover-card::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid rgba(0, 229, 255, 0.4);
+}
+
+.radar-hover-card .hover-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 4px;
+}
+
+.radar-hover-card .hover-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.radar-hover-card .hover-body {
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.radar-hover-card .hover-click-hint {
+  margin-top: 6px;
+  font-size: 9px;
+  color: var(--cyan);
+  text-align: right;
+  letter-spacing: 0.3px;
 }
 
 .radar-bottom-bar {
