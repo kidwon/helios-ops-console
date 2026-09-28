@@ -174,7 +174,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     secAgo: '秒前同步',
     minAgo: '分钟前同步',
     navChapter6: 'Databricks Apps 原生应用',
-    navConsole: '实时运营大屏',
+    navConsole: '查看数据背景',
     navLineage: '数据由来与血缘',
     sourceTooltip: '源自 Databricks Lakebase 权威表',
 
@@ -328,7 +328,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     secAgo: 's ago',
     minAgo: 'm ago',
     navChapter6: 'Databricks Apps View',
-    navConsole: 'Operations Console',
+    navConsole: 'World & Data Lore',
     navLineage: 'Data Lineage & Provenance',
     sourceTooltip: 'Sourced from Databricks Lakebase Postgres',
 
@@ -482,7 +482,7 @@ export const TRANSLATIONS: Record<Language, TranslationDict> = {
     secAgo: '秒前',
     minAgo: '分前',
     navChapter6: 'Databricks Apps ビュー',
-    navConsole: 'リアルタイム運用',
+    navConsole: '世界観・データ背景',
     navLineage: 'データリネージ由来',
     sourceTooltip: 'Databricks Lakebase 信頼データソース準拠',
 

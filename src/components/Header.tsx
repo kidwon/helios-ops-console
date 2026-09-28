@@ -122,8 +122,9 @@ export const Header: React.FC<HeaderProps> = ({
               role="tab"
               aria-selected={currentView === 'console'}
               id="tab-console"
+              title={t.navConsole}
             >
-              <LayoutDashboard size={13} />
+              <Globe size={13} />
               <span>{t.navConsole}</span>
             </button>
             <button
