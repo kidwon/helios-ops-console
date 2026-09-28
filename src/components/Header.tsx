@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHeliosData } from '../context/HeliosDataContext';
-import { formatSolTime } from '../utils/formatters';
 import type { Language } from '../i18n/translations';
 import { 
   Radio, 
-  Database, 
-  Zap, 
   Volume2, 
   VolumeX, 
-  RefreshCw, 
+  RefreshCw,
   Sliders, 
-  Activity,
-  Globe,
-  LayoutDashboard,
-  Layers,
+  Globe, 
+  Layers, 
   Cpu
 } from 'lucide-react';
 
@@ -31,10 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
   onViewChange
 }) => {
   const { 
-    isLiveConvex, 
-    triggerLakebaseSync, 
-    lastSyncTime,
-    syncLogs,
+    triggerLakebaseSync,
     soundEnabled, 
     setSoundEnabled,
     language,
@@ -43,33 +35,7 @@ export const Header: React.FC<HeaderProps> = ({
     playUiSound
   } = useHeliosData();
 
-  const [clock, setClock] = useState<string>(formatSolTime());
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
-  const [secondsSinceSync, setSecondsSinceSync] = useState<number>(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setClock(formatSolTime());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    const updateDiff = () => {
-      setSecondsSinceSync(Math.max(0, Math.floor((Date.now() - lastSyncTime) / 1000)));
-    };
-    updateDiff();
-    const timer = setInterval(updateDiff, 1000);
-    return () => clearInterval(timer);
-  }, [lastSyncTime]);
-
-  const isFresh = secondsSinceSync < 60;
-  const latestLog = syncLogs[0];
-  const relativeTimeString = secondsSinceSync < 5 
-    ? t.syncedJustNow 
-    : secondsSinceSync < 60
-      ? `${secondsSinceSync} ${t.secAgo}`
-      : `${Math.floor(secondsSinceSync / 60)} ${t.minAgo}`;
 
   const handleManualSync = async () => {
     setIsSyncing(true);
@@ -140,44 +106,6 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
         )}
-      </div>
-
-      <div className="header-center">
-        {/* Real-time Status Badges matching 3-layer architecture */}
-        <div className="status-pill-group">
-          {/* Layer 1: Databricks Lakebase */}
-          <div className="status-pill lakebase-pill" title="Databricks Lakebase Postgres System of Record">
-            <Database size={13} className="pill-icon text-emerald" />
-            <span className="pill-val status-online">{t.lakebaseStatus}</span>
-          </div>
-
-          {/* Real-time Data Freshness Badge: Live Synced vs Edge Cached Snapshot */}
-          <div 
-            className={`status-pill freshness-pill ${isFresh ? 'freshness-live' : 'freshness-cached'}`}
-            title={`${t.sourceTooltip}\n• Checksum: ${latestLog?.checksum || 'chk-live-lakebase'}\n• Latency: ${latestLog?.duration_ms || 28}ms\n• Pipeline: Lakebase Postgres -> Convex Edge Cache`}
-          >
-            <span className={`pulse-dot ${isFresh ? 'dot-emerald' : 'dot-amber'}`} />
-            <span className="pill-label">{isFresh ? t.dataFreshnessLive : t.dataFreshnessCached}:</span>
-            <span className={`pill-val ${isFresh ? 'text-emerald' : 'text-amber'}`}>
-              {relativeTimeString}
-            </span>
-          </div>
-
-          {/* Layer 2: Convex Reactive Gateway */}
-          <div className="status-pill convex-pill" title="Convex Cloud Reactive WebSocket Push Engine">
-            <Zap size={13} className="pill-icon text-cyan" />
-            <span className="pill-label">CONVEX EDGE:</span>
-            <span className="pill-val text-cyan">
-              {isLiveConvex ? t.convexStatusLive : t.convexStatusPush}
-            </span>
-          </div>
-
-          {/* Layer 3: Telemetry Sol Clock */}
-          <div className="status-pill clock-pill">
-            <Activity size={13} className="pill-icon text-emerald" />
-            <span className="pill-val font-mono">{clock}</span>
-          </div>
-        </div>
       </div>
 
       <div className="header-right">
