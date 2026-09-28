@@ -42,6 +42,7 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
     selectedDepot, 
     setSelectedDepot, 
     toggleAresMarginIncident,
+    activeRegionFilter,
     language, 
     t, 
     translateBody, 
@@ -310,9 +311,16 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
     }
   };
 
-  const activeFocusedDepot = selectedDepot || depots.find(d => d.warehouse_id === 'DEP-03') || depots[0];
+  // Always re-derive from live depots array so incident toggle / restore updates inspector immediately
+  const selectedId = selectedDepot?.warehouse_id ?? 'DEP-03';
+  const activeFocusedDepot = depots.find(d => d.warehouse_id === selectedId) ?? depots.find(d => d.warehouse_id === 'DEP-03') ?? depots[0];
   const focusedLore = activeFocusedDepot ? depotLoreData[activeFocusedDepot.warehouse_id] : null;
   const focusedTelemetry = activeFocusedDepot ? CELESTIAL_TELEMETRY[activeFocusedDepot.warehouse_id] : null;
+
+  // Filter depots for inspector switcher by active region
+  const switcherDepots = activeRegionFilter === 'ALL'
+    ? depots
+    : depots.filter(d => d.depot_region === activeRegionFilter);
 
   return (
     <div className="world-lore-container">
@@ -427,7 +435,7 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
                   <span>{language === 'zh' ? '天体实时遥测侦测台' : 'ORBITAL TELEMETRY'}</span>
                 </div>
                 <div className="inspector-depot-switcher">
-                  {depots.map(dep => (
+                  {switcherDepots.map(dep => (
                     <button
                       key={dep.warehouse_id}
                       type="button"
@@ -527,100 +535,9 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
             </div>
           )}
         </div>
-
-        {/* 6 Depots Detailed Lore Matrix */}
-        <div className="depot-lore-grid">
-          {depots.map(d => {
-            const lore = depotLoreData[d.warehouse_id] || {
-              codename: d.warehouse_id,
-              roleZh: '跨星际物资集散中心',
-              roleEn: 'Interplanetary logistics node',
-              roleJa: '惑星間物流ノード',
-              loreZh: '承担所在天体区域的标准货运调度与物资中转。',
-              loreEn: 'Handles baseline freight scheduling and transshipment for this region.',
-              loreJa: '該当領域における標準的な貨物中継を管轄。',
-              hazardZh: '天体引力与通信延迟工况',
-              hazardEn: 'Gravitational forces and communication latency',
-              hazardJa: '重力波および通信ラグ',
-              primaryCargo: 'General Space Freight'
-            };
-
-            const isAres = d.warehouse_id === 'DEP-03';
-            const isSelected = activeFocusedDepot?.warehouse_id === d.warehouse_id;
-            const roleText = language === 'zh' ? lore.roleZh : language === 'ja' ? lore.roleJa : lore.roleEn;
-            const loreDesc = language === 'zh' ? lore.loreZh : language === 'ja' ? lore.loreJa : lore.loreEn;
-            const hazardText = language === 'zh' ? lore.hazardZh : language === 'ja' ? lore.hazardJa : lore.hazardEn;
-
-            return (
-              <div 
-                key={d.warehouse_id} 
-                className={`depot-lore-card glass-card ${isAres && isAresIncident ? 'card-incident-border' : ''} ${isSelected ? 'card-focused-border' : ''}`}
-                onClick={() => {
-                  setSelectedDepot(d);
-                  handleOpenDepotDetail(d);
-                }}
-              >
-                <div className="card-top-row">
-                  <div className="depot-badge-group">
-                    <span className="depot-id-badge font-mono">{d.warehouse_id}</span>
-                    <span className="depot-codename font-mono">{lore.codename}</span>
-                  </div>
-                  <span className={`status-pill status-${d.status_alert.toLowerCase()}`}>
-                    {d.status_alert}
-                  </span>
-                </div>
-
-                <div className="depot-title-area">
-                  <h3 className="depot-display-name">{d.depot}</h3>
-                  <div className="depot-sub-tags font-mono">
-                    <span className="body-tag">📍 {translateBody(d.depot_body)}</span>
-                    <span className="region-tag">[{d.depot_region}]</span>
-                  </div>
-                </div>
-
-                <div className="depot-role-box">
-                  <span className="role-headline">{roleText}</span>
-                  <p className="role-paragraph">{loreDesc}</p>
-                </div>
-
-                {/* Primary Cargo & Hazard Intel */}
-                <div className="depot-intel-pills font-mono">
-                  <div className="intel-row">
-                    <span className="intel-key">📦 {language === 'zh' ? '核心品类:' : 'CARGO:'}</span>
-                    <span className="intel-val text-cyan">{lore.primaryCargo}</span>
-                  </div>
-                  <div className="intel-row">
-                    <span className="intel-key">⚠️ {language === 'zh' ? '工况挑战:' : 'CHALLENGE:'}</span>
-                    <span className="intel-val text-amber">{hazardText}</span>
-                  </div>
-                </div>
-
-                {/* Live Real-time Telemetry strip */}
-                <div className="depot-kpi-footer font-mono">
-                  <div className="kpi-mini-col">
-                    <span className="kpi-mini-lbl">{language === 'zh' ? '总营收' : 'REVENUE'}</span>
-                    <span className="kpi-mini-val text-solar">{formatCredits(d.revenue)}</span>
-                  </div>
-                  <div className="kpi-mini-col">
-                    <span className="kpi-mini-lbl">{language === 'zh' ? '毛利率' : 'MARGIN'}</span>
-                    <span className={`kpi-mini-val ${d.gross_margin_rate < 0.3 ? 'text-crimson' : 'text-emerald'}`}>
-                      {formatPercent(d.gross_margin_rate, 1)}
-                    </span>
-                  </div>
-                  <div className="kpi-mini-col">
-                    <span className="kpi-mini-lbl">{language === 'zh' ? '准时率' : 'SLA'}</span>
-                    <span className="kpi-mini-val text-cyan">{formatPercent(d.on_time_rate, 1)}</span>
-                  </div>
-                </div>
-
-                <div className="card-click-hint font-mono">
-                  <span>{language === 'zh' ? '点击查看该仓实时雷达档案 →' : 'Click to inspect telemetry dossier →'}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </section>
+
+
 
       {/* 3. 10 Simulated Upstream Telemetry Streams Specification */}
       <section className="world-section">
