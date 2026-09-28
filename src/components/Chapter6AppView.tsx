@@ -14,7 +14,8 @@ import {
   RefreshCw,
   ArrowUpDown,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Sparkles
 } from 'lucide-react';
 
 type SortKey = keyof DepotRecord;
@@ -72,6 +73,35 @@ export const Chapter6AppView: React.FC = () => {
 
   return (
     <div className="chapter6-app-container" id="chapter6-app-view">
+      {/* Production App Showcase Orientation Card */}
+      <div className="db-apps-intro-card">
+        <div className="intro-badge font-mono">
+          <Sparkles size={13} className="text-cyan animate-pulse" />
+          <span>DATABRICKS APPS SHOWCASE // 生产端应用展示</span>
+        </div>
+        <div className="intro-body">
+          <div className="intro-headline">
+            <span className="intro-label font-mono text-cyan">
+              {language === 'zh' ? '生产端应用体验：' : language === 'ja' ? '本番アプリケーション体験：' : 'Production App Experience: '}
+            </span>
+            <span className="intro-main">
+              {language === 'zh'
+                ? '默认加载，1:1 复刻 Streamlit 生产界面，展示企业级单点点查与实时运营看板。'
+                : language === 'ja'
+                ? 'デフォルト表示。Streamlit 本番運用 UI を 1:1 で再現し、エンタープライズ級のポイントルックアップとリアルタイム運用ダッシュボードを提供。'
+                : 'Default view featuring a 1:1 replica of the native Streamlit production interface, showcasing enterprise-grade keyed point lookups and operational monitoring.'}
+            </span>
+          </div>
+          <p className="intro-sub">
+            {language === 'zh'
+              ? '本页面直观呈现部署在 Databricks Apps 托管环境中的 Python / Streamlit 生产服务。前端连接池低延迟直查 Lakebase 托管 Postgres 表 public.depot_ops_summary，指标口径与上游企业统一度量语义层 100% 严格一致。'
+              : language === 'ja'
+              ? 'Databricks Apps プラットフォーム上で稼働する Python / Streamlit 本番サービスを再現。Lakebase Postgres（public.depot_ops_summary）へ直接クエリを発行し、指標乖離ゼロの運用監視を実現しています。'
+              : 'Demonstrates a real Python / Streamlit service hosted on the Databricks Apps runtime. Queries Lakebase Postgres (public.depot_ops_summary) with sub-10ms latency, perfectly aligned to upstream semantic metric views.'}
+          </p>
+        </div>
+      </div>
+
       {/* Databricks Apps Environment Banner */}
       <div className="databricks-app-banner">
         <div className="banner-left">
