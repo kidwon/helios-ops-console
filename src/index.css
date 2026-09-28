@@ -2657,29 +2657,459 @@ html, body {
   color: #fff;
 }
 
+/* ==============================================================================
+   RESPONSIVE DESIGN & MOBILE OPTIMIZATIONS
+   ============================================================================== */
+
 @media (max-width: 1024px) {
   .stage-deep-dive-grid,
-  .principles-comparison-grid {
+  .principles-comparison-grid,
+  .ops-layout-grid {
     grid-template-columns: 1fr;
+  }
+
+  .executive-kpi-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* Responsive Utilities */
 @media (max-width: 768px) {
+  /* Global Container Adjustments */
+  .helios-root {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  .helios-dashboard-container {
+    padding: 10px 12px;
+    gap: 16px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Compact Sleek Header on Mobile */
   .helios-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
-    padding: 14px;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 0 0 14px 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .helios-insignia {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .brand-subtitle {
+    display: none; /* Hide verbose subtitle on mobile to preserve screen estate */
+  }
+
+  .view-mode-tabs {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 2px;
+    display: flex;
+    background: rgba(8, 12, 20, 0.95);
+    border: 1px solid rgba(0, 242, 255, 0.2);
+  }
+
+  .view-tab-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 7px 8px;
+    font-size: 11.5px;
+  }
+
   .header-center {
+    width: 100%;
     overflow-x: auto;
-    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+    scrollbar-width: none;
   }
+  .header-center::-webkit-scrollbar {
+    display: none;
+  }
+
+  .status-pill-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: max-content;
+  }
+
+  .status-pill {
+    padding: 4px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
   .header-right {
-    justify-content: flex-end;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
   }
-  .helios-dashboard-container {
+
+  .lang-switcher-group {
+    padding: 2px 4px;
+    gap: 4px;
+  }
+
+  .lang-btn {
+    padding: 3px 5px;
+    font-size: 9.5px;
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sync-btn {
+    padding: 6px 10px;
+    font-size: 10.5px;
+  }
+
+  .dev-btn {
+    padding: 6px 10px;
+    font-size: 10.5px;
+  }
+
+  /* Executive KPI Grid Mobile */
+  .executive-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .metric-card {
+    padding: 12px 14px;
+  }
+
+  .metric-value {
+    font-size: 19px;
+  }
+
+  /* Radar & Solar System Map */
+  .radar-wrapper {
+    padding: 12px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .radar-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .region-filter-group {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .region-filter-group::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Depot Cards Grid */
+  .depots-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .depot-card {
     padding: 14px;
+  }
+
+  /* Operations Action Panel */
+  .ops-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .dispatch-card, .queue-card {
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dispatch-form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* Comparison Table & Log */
+  .comparison-section, .operations-log-panel {
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .table-controls-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .search-input-box {
+    width: 100%;
+  }
+
+  .comparison-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .log-panel-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .log-filter-tabs {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .log-filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .entry-left {
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: 100%;
+  }
+
+  .entry-msg {
+    word-break: break-word;
+    white-space: normal;
+  }
+
+  /* Data Lineage Explorer Mobile */
+  .lineage-explorer-container {
+    padding: 12px;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .lineage-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .lineage-title-group {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .lineage-icon-badge {
+    width: 42px;
+    height: 42px;
+  }
+
+  .lineage-main-title {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+
+  .lineage-sub {
+    font-size: 11.5px;
+  }
+
+  .lineage-meta-box {
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    box-sizing: border-box;
+  }
+
+  .pipeline-stepper-scroll {
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .pipeline-stepper-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stage-step-card {
+    min-width: 140px;
+    padding: 10px;
+  }
+
+  .stage-deep-dive-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .stage-spec-card, .stage-code-card {
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .spec-stage-title {
+    font-size: 16px;
+  }
+
+  .spec-metrics-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .code-editor-box {
+    max-height: 260px;
+    padding: 10px;
+  }
+
+  .code-block code {
+    font-size: 10px;
+  }
+
+  .code-footer-flow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .flow-arrow {
+    align-self: center;
+    transform: rotate(90deg);
+  }
+
+  .lineage-metric-trace-section {
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .metric-domain-tabs {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+  }
+  .metric-domain-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .metric-tab-btn {
+    white-space: nowrap;
+    padding: 6px 10px;
+    font-size: 10px;
+  }
+
+  .pathway-grid {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .pathway-node {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .pathway-link {
+    text-align: center;
+    transform: rotate(90deg);
+    margin: -2px 0;
+  }
+
+  .lineage-snapshot-section {
+    padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .principles-comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Modal & Drawer on Mobile */
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-card {
+    width: 100%;
+    max-width: 100%;
+    max-height: 92vh;
+    padding: 16px;
+    margin: 0;
+    overflow-y: auto;
+  }
+
+  .modal-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .modal-stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .dev-hud-drawer {
+    width: 100vw;
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .executive-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sync-btn span, 
+  .dev-btn span {
+    display: none; /* Show icon only on compact screens */
+  }
+
+  .sync-btn, 
+  .dev-btn {
+    padding: 6px 8px;
+  }
+
+  .metric-value {
+    font-size: 18px;
+  }
+
+  .lineage-main-title {
+    font-size: 15px;
   }
 }
