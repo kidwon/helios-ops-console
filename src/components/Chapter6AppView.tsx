@@ -108,10 +108,10 @@ export const Chapter6AppView: React.FC = () => {
           </h1>
           <p className="st-caption">
             {language === 'zh'
-              ? '源自 Lakebase 的实时仓库运营视图。数据与第 5 章统一语义层严格对齐。'
+              ? '源自 Lakebase Postgres 的实时仓库运营视图。数据与企业级统一度量语义层严格对齐。'
               : language === 'ja'
-              ? 'Lakebase から提供されるリアルタイム拠点ビュー。数値はセクション 5 のセマンティック層と完全に一致します。'
-              : 'Live depot view served from Lakebase. Figures match the Section 5 semantic layer.'}
+              ? 'Lakebase Postgres から提供されるリアルタイム拠点ビュー。数値は全社統一度量セマンティック層と厳密に一致します。'
+              : 'Live depot view served from Lakebase Postgres. Figures match the curated enterprise semantic layer.'}
           </p>
         </div>
 
@@ -146,8 +146,8 @@ export const Chapter6AppView: React.FC = () => {
               </strong>
               <span>
                 {language === 'zh'
-                  ? '火星仓库由于批次 3（Batch 3）的高返工成本事件，导致毛利率下降至 31.9%（低于 38.0% 健康线）。此数据直接映射自 Section 5 sales_mv 与 Lakebase public.depot_ops_summary。'
-                  : 'Ares Depot margin is dragged down to 31.9% by the batch three defective component incident, as reflected in the Section 5 semantic layer.'}
+                  ? '火星仓库由于批次 3（Batch 3）的高返工成本事件，导致毛利率下降至 31.9%（低于 38.0% 健康线）。此数据直接映射自统一销售度量层 sales_mv 与 Lakebase 生产表 public.depot_ops_summary。'
+                  : 'Ares Depot margin is dragged down to 31.9% by the batch three defective component incident, as mathematically captured in the sales_mv semantic layer.'}
               </span>
             </div>
           </div>
@@ -344,11 +344,11 @@ export const Chapter6AppView: React.FC = () => {
           <details className="st-details">
             <summary className="st-summary font-mono">
               <Terminal size={14} className="text-cyan" />
-              <span>{language === 'zh' ? '查看第 6 章原版 app.py 生产代码 (Click to inspect app.py)' : 'Inspect Section 6 app.py Source Code'}</span>
+              <span>{language === 'zh' ? '查看 Databricks Apps 生产端代码 app.py (Click to inspect app.py)' : language === 'ja' ? 'Databricks Apps 本番コード app.py を表示 (Click to inspect app.py)' : 'Inspect Databricks Apps app.py Source Code'}</span>
             </summary>
             <div className="st-code-box">
               <pre className="font-mono">
-                <code>{`# The Data Engineering Simulator / 06_lakebase_app/app/app.py
+                <code>{`# Databricks Apps / Streamlit Production Service: app.py
 import os
 import pandas as pd
 import psycopg
@@ -392,7 +392,7 @@ def query(sql, params=None):
     return pd.DataFrame(rows, columns=columns)
 
 st.title("🛰️ Helios Depot Operations Console")
-st.caption("Live depot view served from Lakebase. Figures match the Section 5 semantic layer.")
+st.caption("Live depot view served from Lakebase. Figures match the enterprise semantic layer.")
 
 summary = query(f"SELECT * FROM {SUMMARY_TABLE} ORDER BY revenue DESC")
 depot = st.selectbox("Depot", summary["depot"].tolist())

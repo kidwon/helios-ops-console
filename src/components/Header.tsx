@@ -100,7 +100,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* View Switcher: Chapter 6 App vs Operations Console vs Data Lineage Provenance */}
+        {/* View Switcher: Databricks Apps vs Operations Console vs Data Lineage Provenance */}
         {onViewChange && (
           <div className="view-mode-tabs" role="tablist">
             <button
@@ -110,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
               role="tab"
               aria-selected={currentView === 'chapter6'}
               id="tab-chapter6"
-              title="Chapter 6 Databricks Apps / Streamlit Console"
+              title="Databricks Apps / Streamlit Console"
             >
               <Cpu size={13} />
               <span>{t.navChapter6}</span>

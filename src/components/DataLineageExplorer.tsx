@@ -113,7 +113,7 @@ def ensure_landing(catalog, up_to_batch=1):
       ],
       inputFeeds: ['Landing Volume landed_files/*'],
       outputArtifacts: ['Bronze Delta Tables with _ingest_timestamp & _source_file'],
-      codeSnippet: `-- 03_jobs/bronze_ingestion.sql
+      codeSnippet: `-- databricks/bronze_ingestion.sql
 CREATE OR REPLACE TABLE helios_bronze.bronze_order_lines AS
 SELECT 
   *,
@@ -155,7 +155,7 @@ FROM cloudFiles(
       ],
       inputFeeds: ['helios_bronze.*'],
       outputArtifacts: ['Conformed Silver Entities ready for dimensional modeling'],
-      codeSnippet: `-- 03_jobs/silver_order_lines_dedup.sql
+      codeSnippet: `-- databricks/silver_order_lines_dedup.sql
 WITH ranked AS (
   SELECT 
     order_line_id, order_id, product_id, quantity, unit_price,
@@ -199,7 +199,7 @@ WHERE rank = 1;`,
       ],
       inputFeeds: ['helios_silver.* conformed tables'],
       outputArtifacts: ['Enterprise Gold Star Schema (Facts + Dimensions)'],
-      codeSnippet: `-- 03_jobs/gold_fact_order_lines.sql
+      codeSnippet: `-- databricks/gold_fact_order_lines.sql
 SELECT 
   ol.order_line_id,
   ol.order_id,
@@ -224,17 +224,17 @@ JOIN helios_silver.silver_price_scd p
     {
       id: 'semantic',
       badge: 'STAGE 4',
-      name: language === 'zh' ? 'Semantic 统一度量语义层' : language === 'ja' ? 'Semantic 統一指標セマンティック層' : 'Semantic Metric Views (Section 5)',
+      name: language === 'zh' ? 'Semantic 统一度量语义层' : language === 'ja' ? 'Semantic 統一指標セマンティック層' : 'Semantic Metric Views',
       role: language === 'zh' ? '单一业务口径定义 · 消除指标漂移' : language === 'ja' ? '単一の指標定義・ドリフト完全排除' : 'Single Definition of Every Metric',
       engine: 'Databricks Semantic Engine (Metric Views)',
       storageFormat: 'Unified Metric Views (Virtual Definitions)',
       latencySla: 'On-Demand Compilation (<100ms)',
       volumeSize: '3 Standard Metric Views',
       whyItExists: language === 'zh'
-        ? '第 5 章节核心成果。将全公司的销售、订单履约、库存指标用 MEASURE() 严格定义一次。无论上层是 Genie 智能问答、AI/BI 仪表板，还是后续的在线服务表，全部从语义层调用，杜绝各部门口径不一的“指标漂移”。'
+        ? '企业级统一度量语义层。将全公司的销售、订单履约、库存指标用 MEASURE() 严格定义一次。无论上层是 Genie 智能问答、AI/BI 仪表板，还是后续的在线服务表，全部从语义层调用，杜绝各部门口径不一的“指标漂移”。'
         : language === 'ja'
-        ? 'セクション 5 の中核成果。全社の売上、納期遵守率、在庫指標を MEASURE() で厳密に一度だけ定義。Genie AI、ダッシュボード、運用テーブルのすべてがここを参照し、指標の乖離を根絶します。'
-        : 'Section 5 milestone. Every KPI is defined exactly once with MEASURE(). Genie, AI/BI dashboards, and operational tables consume from this single source of truth.',
+        ? '全社共通のセマンティック指標基盤。全社の売上、納期遵守率、在庫指標を MEASURE() で厳密に一度だけ定義。Genie AI、ダッシュボード、運用テーブルのすべてがここを参照し、指標の乖離を根絶します。'
+        : 'Enterprise metric views milestone. Every KPI is defined exactly once with MEASURE(). Genie, AI/BI dashboards, and operational tables consume from this single source of truth.',
       keyArtifacts: [
         'helios_semantic.sales_mv (Revenue, Gross Margin, Margin Rate, Units Sold)',
         'helios_semantic.orders_mv (Orders, Cancellation Rate, On Time Rate, Backorders)',
@@ -242,7 +242,7 @@ JOIN helios_silver.silver_price_scd p
       ],
       inputFeeds: ['helios_gold.fact_*', 'helios_gold.dim_*'],
       outputArtifacts: ['Zero-drift Semantic Layer for Analytics & Apps'],
-      codeSnippet: `-- 05_genie_dashboards/semantic_views.sql
+      codeSnippet: `-- databricks/semantic_views.sql
 CREATE OR REPLACE VIEW helios_semantic.sales_mv AS
 SELECT 
   w.warehouse_name AS \`Depot\`,
@@ -263,17 +263,17 @@ GROUP BY w.warehouse_name;`,
     {
       id: 'curated_serving',
       badge: 'STAGE 5',
-      name: language === 'zh' ? 'Curated Serving 服务宽表 (CDF)' : language === 'ja' ? 'Curated Serving 運用テーブル (CDF)' : 'Curated Serving Table (Section 6.5)',
+      name: language === 'zh' ? 'Curated Serving 服务宽表 (CDF)' : language === 'ja' ? 'Curated Serving 運用テーブル (CDF)' : 'Curated Serving Table (CDF)',
       role: language === 'zh' ? '精简切片 · 变更数据流 (CDF) 增量捕获' : language === 'ja' ? 'スライス集約・Change Data Feed (CDF)' : 'Curated Aggregation with Change Data Feed',
       engine: 'Databricks Delta Lake Engine',
       storageFormat: 'Delta Lake with Change Data Feed enabled',
       latencySla: '~10-15s Sync Prep',
       volumeSize: '6 Rows (1 Row per Depot)',
       whyItExists: language === 'zh'
-        ? '第 6.5 章节核心 DDL！绝不把整个 Gold 层几千万行明细直接灌入 Postgres，而是提炼出一张仅 6 行、每个仓库一行的极简宽表 depot_ops_summary。同时开启 Change Data Feed (CDF)，后续只同步有数据变动的行！'
+        ? '生产级在线服务核心 DDL！绝不把整个 Gold 层几千万行明细直接灌入 Postgres，而是提炼出一张仅 6 行、每个仓库一行的极简宽表 depot_ops_summary。同时开启 Change Data Feed (CDF)，后续只同步有数据变动的行！'
         : language === 'ja'
-        ? 'セクション 6.5 の中核 DDL。Gold の全データを同期するのではなく、拠点ごとに 1 行（計6行）に凝縮した depot_ops_summary を作成。Change Data Feed (CDF) を有効化し、差分のみを効率良く同期します。'
-        : 'The pivotal Section 6.5 curation DDL. Aggregates the 3 metric views into a 6-row table (1 row per depot) with Change Data Feed enabled for lightweight downstream sync.',
+        ? '本番運用のための集約テーブル DDL。Gold の全データを同期するのではなく、拠点ごとに 1 行（計6行）に凝縮した depot_ops_summary を作成。Change Data Feed (CDF) を有効化し、差分のみを効率良く同期します。'
+        : 'The pivotal operational curation DDL. Aggregates the 3 metric views into a 6-row table (1 row per depot) with Change Data Feed enabled for lightweight downstream sync.',
       keyArtifacts: [
         'helios_semantic.depot_ops_summary',
         'TBLPROPERTIES (\'delta.enableChangeDataFeed\' = \'true\')'
@@ -285,7 +285,7 @@ GROUP BY w.warehouse_name;`,
         'helios_gold.dim_warehouse'
       ],
       outputArtifacts: ['Operational Serving Delta Table ready for Lakebase Sync'],
-      codeSnippet: `-- 06_lakebase_app/6_5_walkthrough_lakebase.py
+      codeSnippet: `-- databricks/lakebase_curation.sql
 CREATE OR REPLACE TABLE helios_semantic.depot_ops_summary
 TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
 AS
