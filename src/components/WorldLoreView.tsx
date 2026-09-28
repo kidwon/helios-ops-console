@@ -539,66 +539,55 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
 
 
 
-      {/* 2b. Incident Narrative & Lakehouse Solution Context */}
+
+      {/* Incident Dossier Banner & Interactive Controls */}
       <section className="world-section">
-          <div className="incident-grid-content">
-            <div className="incident-narrative-card">
-              <h3 className="incident-sub-title">
-                <Info size={16} className="text-cyan" />
-                <span>{language === 'zh' ? '事件始末与业务全景' : 'Incident Narrative & Business Impact'}</span>
-              </h3>
-              <p>
-                {language === 'zh' ? (
-                  <>
-                    在模拟系统的 <strong>批次 3（Batch 3）</strong> 数据流中，核心供应商 <strong>SUP-11</strong>（离子推进器核心供应商）突然上调零部件出厂价。
-                    更加致命的是，该批次推进器到达火星赤道 Ares 仓后，质检部门检测到内部离子喷口存在<strong>隐性晶格微裂纹缺陷</strong>。
-                  </>
-                ) : (
-                  <>
-                    In simulated <strong>Batch 3</strong>, primary vendor <strong>SUP-11</strong> (ion thruster contractor) unilaterally raised component prices while delivering hardware plagued by microscopic crystal lattice fractures in the exhaust nozzle.
-                  </>
-                )}
-              </p>
-              <p>
-                {language === 'zh' ? (
-                  <>
-                    为保障行星际航行安全，火星工厂被迫执行高成本的拆解、再测试与紧急返工流程，报废了大量组件。这导致火星 Ares 仓的毛利率从健康基准 <strong>38.0% 断崖式跌落至 23.0%</strong>（当前实时宽表反映为 31.9%），直接拖累全太阳系平均毛利。
-                  </>
-                ) : (
-                  <>
-                    Mars technicians performed emergency disassembly and safety recalls, causing scrap rates to soar. This dragged Ares Depot gross margin from <strong>38.0% nominal down to 23.0%</strong> (currently recorded at 31.9% in Lakebase), impacting company-wide profitability.
-                  </>
-                )}
-              </p>
+        <div className="incident-dossier-panel glass-card">
+          <div className="incident-dossier-header">
+            <div className="incident-title-group">
+              <div className="incident-badge-row">
+                <span className="incident-alert-badge">
+                  <AlertTriangle size={14} className="text-solar" />
+                  <span className="font-mono">INCIDENT DOSSIER #2287-MARS-B3</span>
+                </span>
+                <span className="incident-status-tag font-mono">
+                  {isAresIncident 
+                    ? (language === 'zh' ? '🚨 故障生效中 (ACTIVE INCIDENT)' : '🚨 INCIDENT ACTIVE') 
+                    : (language === 'zh' ? '✅ 已恢复基准 (NOMINAL BASELINE)' : '✅ NOMINAL')}
+                </span>
+              </div>
+              <h2 className="incident-headline">
+                {language === 'zh'
+                  ? '核心业务故障还原：火星 Ares 仓「批次 3」瑕疵件利润失控危机'
+                  : language === 'ja'
+                  ? '中核インシデント詳細：火星 Ares 拠点「バッチ 3」部品欠陥による粗利急落'
+                  : 'Critical Incident Dossier: Mars Ares Depot Batch 3 Propulsion Defect Drag'}
+              </h2>
             </div>
 
-            <div className="incident-data-card">
-              <h3 className="incident-sub-title">
-                <Database size={16} className="text-purple-accent" />
-                <span>{language === 'zh' ? '现代数据工程架构的解题关键' : 'How Modern Lakehouse Solves the Crisis'}</span>
-              </h3>
-              <ul className="incident-steps-list">
-                <li>
-                  <strong>① Silver 层 SCD Type 2 价格拉链:</strong>
-                  <span>{language === 'zh' ? '通过 effective_from 与 effective_to 维护成本历史，不覆盖过去正常的交易成本。' : 'Preserves historic prices across validity windows without corrupting past records.'}</span>
-                </li>
-                <li>
-                  <strong>② Gold 事实表下单时点点对点 Join:</strong>
-                  <span>{language === 'zh' ? '订单在生成时刻匹配当时有效的采购成本快照，精准量化每笔返工订单造成的亏损。' : 'Point-in-time joins accurately anchor realized component cost at order placement time.'}</span>
-                </li>
-                <li>
-                  <strong>③ Semantic 统一度量语义层 MEASURE():</strong>
-                  <span>{language === 'zh' ? '在语义视图中严格定义毛利率公式，消除跨部门报表口径不一的“指标漂移”，第一时间全网报警。' : 'Standardized MEASURE() formulas ensure instant, zero-drift alerts across all BI dashboards and operational apps.'}</span>
-                </li>
-                <li>
-                  <strong>④ Lakebase 极速同步:</strong>
-                  <span>{language === 'zh' ? '通过 Change Data Feed (CDF) 毫秒级同步至 public.depot_ops_summary，让前台指挥官在秒级雷达上看到红色告警。' : 'Change Data Feed synchronizes aggregated rows to Lakebase Postgres in milliseconds.'}</span>
-                </li>
-              </ul>
+            {/* Interactive Drill Buttons */}
+            <div className="incident-interactive-actions">
+              <button
+                type="button"
+                className={`incident-action-btn btn-trigger ${isAresIncident ? 'active' : ''}`}
+                onClick={() => { playUiSound('alert'); toggleAresMarginIncident(false); }}
+              >
+                <TrendingDown size={14} />
+                <span>{language === 'zh' ? '触发 Ares 利润暴跌 (23%)' : 'Trigger Ares Drop (23%)'}</span>
+              </button>
+              <button
+                type="button"
+                className={`incident-action-btn btn-restore ${!isAresIncident ? 'active' : ''}`}
+                onClick={() => { playUiSound('success'); toggleAresMarginIncident(true); }}
+              >
+                <CheckCircle2 size={14} />
+                <span>{language === 'zh' ? '恢复 Ares 至正常指标 (38%)' : 'Restore Ares (38%)'}</span>
+              </button>
             </div>
           </div>
-      </section>
 
+        </div>
+      </section>
       {/* 3. 10 Simulated Upstream Telemetry Streams Specification */}
       <section className="world-section">
         <div className="section-title-bar">
@@ -657,55 +646,6 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
               </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* 4. Critical Incident Dossier: Mars Ares Depot Batch 3 Margin Crisis */}
-      <section className="world-section">
-        <div className="incident-dossier-panel glass-card">
-          <div className="incident-dossier-header">
-            <div className="incident-title-group">
-              <div className="incident-badge-row">
-                <span className="incident-alert-badge">
-                  <AlertTriangle size={14} className="text-solar" />
-                  <span className="font-mono">INCIDENT DOSSIER #2287-MARS-B3</span>
-                </span>
-                <span className="incident-status-tag font-mono">
-                  {isAresIncident 
-                    ? (language === 'zh' ? '🚨 故障生效中 (ACTIVE INCIDENT)' : '🚨 INCIDENT ACTIVE') 
-                    : (language === 'zh' ? '✅ 已恢复基准 (NOMINAL BASELINE)' : '✅ NOMINAL')}
-                </span>
-              </div>
-              <h2 className="incident-headline">
-                {language === 'zh'
-                  ? '核心业务故障还原：火星 Ares 仓「批次 3」瑕疵件利润失控危机'
-                  : language === 'ja'
-                  ? '中核インシデント詳細：火星 Ares 拠点「バッチ 3」部品欠陥による粗利急落'
-                  : 'Critical Incident Dossier: Mars Ares Depot Batch 3 Propulsion Defect Drag'}
-              </h2>
-            </div>
-
-            {/* Interactive Drill Buttons */}
-            <div className="incident-interactive-actions">
-              <button
-                type="button"
-                className={`incident-action-btn btn-trigger ${isAresIncident ? 'active' : ''}`}
-                onClick={() => { playUiSound('alert'); toggleAresMarginIncident(false); }}
-              >
-                <TrendingDown size={14} />
-                <span>{language === 'zh' ? '触发 Ares 利润暴跌 (23%)' : 'Trigger Ares Drop (23%)'}</span>
-              </button>
-              <button
-                type="button"
-                className={`incident-action-btn btn-restore ${!isAresIncident ? 'active' : ''}`}
-                onClick={() => { playUiSound('success'); toggleAresMarginIncident(true); }}
-              >
-                <CheckCircle2 size={14} />
-                <span>{language === 'zh' ? '恢复 Ares 至正常指标 (38%)' : 'Restore Ares (38%)'}</span>
-              </button>
-            </div>
-          </div>
-
         </div>
       </section>
 
