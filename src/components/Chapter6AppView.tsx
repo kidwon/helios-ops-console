@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useHeliosData } from '../context/HeliosDataContext';
 import type { DepotRecord } from '../types/helios';
 import { 
@@ -11,13 +11,54 @@ import {
   ArrowRight,
   Terminal,
   ShieldCheck,
-  RefreshCw
+  RefreshCw,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from 'lucide-react';
+
+type SortKey = keyof DepotRecord;
+type SortDirection = 'asc' | 'desc';
 
 export const Chapter6AppView: React.FC = () => {
   const { depots, triggerLakebaseSync, language, t } = useHeliosData();
   const [selectedDepotName, setSelectedDepotName] = useState<string>('Ares Depot');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
+  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({
+    key: 'revenue',
+    direction: 'desc'
+  });
+
+  const handleSort = (key: SortKey) => {
+    setSortConfig(prev => {
+      if (prev.key === key) {
+        return {
+          key,
+          direction: prev.direction === 'asc' ? 'desc' : 'asc'
+        };
+      }
+      const isStringCol = ['warehouse_id', 'depot', 'depot_region', 'depot_body'].includes(key);
+      return {
+        key,
+        direction: isStringCol ? 'asc' : 'desc'
+      };
+    });
+  };
+
+  const sortedDepots = useMemo(() => {
+    return [...depots].sort((a, b) => {
+      const valA = a[sortConfig.key];
+      const valB = b[sortConfig.key];
+      if (typeof valA === 'number' && typeof valB === 'number') {
+        return sortConfig.direction === 'asc' ? valA - valB : valB - valA;
+      }
+      const strA = String(valA ?? '');
+      const strB = String(valB ?? '');
+      return sortConfig.direction === 'asc' 
+        ? strA.localeCompare(strB)
+        : strB.localeCompare(strA);
+    });
+  }, [depots, sortConfig]);
 
   const selectedDepot = depots.find(d => d.depot === selectedDepotName) || depots[0];
 
@@ -183,11 +224,16 @@ export const Chapter6AppView: React.FC = () => {
 
         {/* st.subheader("All depots") */}
         <div className="st-subheader-block">
-          <h2 className="st-subheader">
-            {language === 'zh' ? '全部仓库汇总 (All depots)' : language === 'ja' ? '全拠点一覧 (All depots)' : 'All depots'}
-          </h2>
+          <div className="st-subheader-title-group">
+            <h2 className="st-subheader">
+              {language === 'zh' ? '全部仓库汇总 (All depots)' : language === 'ja' ? '全拠点一覧 (All depots)' : 'All depots'}
+            </h2>
+            <span className="st-sort-hint-tag">
+              {language === 'zh' ? '💡 点击表头任意列可升降序排序' : language === 'ja' ? '💡 列ヘッダーをクリックして昇順・降順ソート' : '💡 Click any column header to sort asc/desc'}
+            </span>
+          </div>
           <span className="st-table-caption font-mono">
-            `SELECT * FROM public.depot_ops_summary ORDER BY revenue DESC` (6 rows)
+            `SELECT * FROM public.depot_ops_summary ORDER BY {sortConfig.key} {sortConfig.direction.toUpperCase()}` (6 rows)
           </span>
         </div>
 
@@ -197,24 +243,51 @@ export const Chapter6AppView: React.FC = () => {
             <table className="st-dataframe font-mono">
               <thead>
                 <tr>
-                  <th>warehouse_id</th>
-                  <th>depot</th>
-                  <th>depot_region</th>
-                  <th>depot_body</th>
-                  <th className="text-right">revenue</th>
-                  <th className="text-right">gross_margin</th>
-                  <th className="text-right">gross_margin_rate</th>
-                  <th className="text-right">units_sold</th>
-                  <th className="text-right">orders</th>
-                  <th className="text-right">cancellation_rate</th>
-                  <th className="text-right">on_time_rate</th>
-                  <th className="text-right">backordered_orders</th>
-                  <th className="text-right">stockout_events</th>
-                  <th className="text-right">units_out</th>
+                  {[
+                    { key: 'warehouse_id' as SortKey, label: 'warehouse_id', align: 'left' },
+                    { key: 'depot' as SortKey, label: 'depot', align: 'left' },
+                    { key: 'depot_region' as SortKey, label: 'depot_region', align: 'left' },
+                    { key: 'depot_body' as SortKey, label: 'depot_body', align: 'left' },
+                    { key: 'revenue' as SortKey, label: 'revenue', align: 'right' },
+                    { key: 'gross_margin' as SortKey, label: 'gross_margin', align: 'right' },
+                    { key: 'gross_margin_rate' as SortKey, label: 'gross_margin_rate', align: 'right' },
+                    { key: 'units_sold' as SortKey, label: 'units_sold', align: 'right' },
+                    { key: 'orders' as SortKey, label: 'orders', align: 'right' },
+                    { key: 'cancellation_rate' as SortKey, label: 'cancellation_rate', align: 'right' },
+                    { key: 'on_time_rate' as SortKey, label: 'on_time_rate', align: 'right' },
+                    { key: 'backordered_orders' as SortKey, label: 'backordered_orders', align: 'right' },
+                    { key: 'stockout_events' as SortKey, label: 'stockout_events', align: 'right' },
+                    { key: 'units_out' as SortKey, label: 'units_out', align: 'right' }
+                  ].map(col => {
+                    const isSorted = sortConfig.key === col.key;
+                    return (
+                      <th
+                        key={col.key}
+                        className={`st-th-sortable ${col.align === 'right' ? 'text-right' : ''} ${isSorted ? 'st-th-active' : ''}`}
+                        onClick={() => handleSort(col.key)}
+                        title={`Click to sort by ${col.label} (${isSorted ? (sortConfig.direction === 'asc' ? 'switch to DESC' : 'switch to ASC') : 'sort'})`}
+                      >
+                        <div className={`th-sort-wrapper ${col.align === 'right' ? 'th-right' : ''}`}>
+                          <span>{col.label}</span>
+                          <span className={`th-sort-icon ${isSorted ? 'active' : ''}`}>
+                            {isSorted ? (
+                              sortConfig.direction === 'asc' ? (
+                                <ArrowUp size={12} className="text-cyan animate-pulse" />
+                              ) : (
+                                <ArrowDown size={12} className="text-cyan animate-pulse" />
+                              )
+                            ) : (
+                              <ArrowUpDown size={11} className="st-sort-placeholder" />
+                            )}
+                          </span>
+                        </div>
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
-                {depots.map(row => {
+                {sortedDepots.map(row => {
                   const isSelected = row.depot === selectedDepotName;
                   const isRowAres = row.depot === 'Ares Depot';
                   return (
@@ -228,18 +301,36 @@ export const Chapter6AppView: React.FC = () => {
                       <td className="font-bold">{row.depot}</td>
                       <td>{row.depot_region}</td>
                       <td>{row.depot_body}</td>
-                      <td className="text-right">{Number(row.revenue).toFixed(2)}</td>
-                      <td className="text-right">{Number(row.gross_margin).toFixed(2)}</td>
-                      <td className={`text-right ${isRowAres ? 'text-solar font-bold' : ''}`}>
+                      <td className={`text-right ${sortConfig.key === 'revenue' ? 'st-col-sorted' : ''}`}>
+                        {Number(row.revenue).toFixed(2)}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'gross_margin' ? 'st-col-sorted' : ''}`}>
+                        {Number(row.gross_margin).toFixed(2)}
+                      </td>
+                      <td className={`text-right ${isRowAres ? 'text-solar font-bold' : ''} ${sortConfig.key === 'gross_margin_rate' ? 'st-col-sorted' : ''}`}>
                         {Number(row.gross_margin_rate).toFixed(3)}
                       </td>
-                      <td className="text-right">{row.units_sold}</td>
-                      <td className="text-right">{row.orders}</td>
-                      <td className="text-right">{Number(row.cancellation_rate).toFixed(3)}</td>
-                      <td className="text-right">{Number(row.on_time_rate).toFixed(3)}</td>
-                      <td className="text-right">{row.backordered_orders}</td>
-                      <td className="text-right">{row.stockout_events}</td>
-                      <td className="text-right">{row.units_out}</td>
+                      <td className={`text-right ${sortConfig.key === 'units_sold' ? 'st-col-sorted' : ''}`}>
+                        {row.units_sold}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'orders' ? 'st-col-sorted' : ''}`}>
+                        {row.orders}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'cancellation_rate' ? 'st-col-sorted' : ''}`}>
+                        {Number(row.cancellation_rate).toFixed(3)}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'on_time_rate' ? 'st-col-sorted' : ''}`}>
+                        {Number(row.on_time_rate).toFixed(3)}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'backordered_orders' ? 'st-col-sorted' : ''}`}>
+                        {row.backordered_orders}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'stockout_events' ? 'st-col-sorted' : ''}`}>
+                        {row.stockout_events}
+                      </td>
+                      <td className={`text-right ${sortConfig.key === 'units_out' ? 'st-col-sorted' : ''}`}>
+                        {row.units_out}
+                      </td>
                     </tr>
                   );
                 })}

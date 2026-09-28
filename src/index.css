@@ -2442,6 +2442,22 @@ html, body {
   letter-spacing: -0.5px;
 }
 
+.st-subheader-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.st-sort-hint-tag {
+  font-size: 11px;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.22);
+  color: var(--cyan);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
 /* st.dataframe container */
 .st-dataframe-container {
   background: #101726;
@@ -2473,10 +2489,60 @@ html, body {
   text-transform: lowercase;
 }
 
+/* Sortable column header interactions */
+.st-th-sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.st-th-sortable:hover {
+  background: #162035;
+  color: #f1f5f9;
+}
+
+.st-th-sortable:hover .st-sort-placeholder {
+  opacity: 0.8;
+  color: var(--cyan);
+}
+
+.st-th-active {
+  background: #13223d !important;
+  color: var(--cyan) !important;
+  border-bottom: 2px solid var(--cyan) !important;
+}
+
+.th-sort-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.th-right {
+  justify-content: flex-end;
+}
+
+.th-sort-icon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.85;
+}
+
+.st-sort-placeholder {
+  opacity: 0.25;
+  transition: opacity 0.15s ease;
+}
+
 .st-dataframe tbody td {
   padding: 10px 14px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   color: #cbd5e1;
+}
+
+.st-dataframe tbody td.st-col-sorted {
+  background: rgba(0, 229, 255, 0.025);
+  color: #f8fafc;
 }
 
 .st-dataframe tbody tr:hover {
