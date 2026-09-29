@@ -17,8 +17,11 @@ import {
   Code2,
   FileSpreadsheet,
   Globe,
-  Info
+  Info,
+  FileText,
+  Clock
 } from 'lucide-react';
+import { DATA_STREAMS } from '../data/dataStreams';
 
 interface StageDetail {
   id: string;
@@ -480,6 +483,7 @@ export const syncFromLakebase = action({
                 >
                   <div className="step-header">
                     <span className="step-badge">{stage.badge}</span>
+                    {stage.id === 'landing' && <span className="landing-badge-hint font-mono">10 FEEDS</span>}
                     {isSelected && <span className="active-pill">ACTIVE</span>}
                   </div>
                   <div className="step-name">{stage.name}</div>
@@ -595,6 +599,83 @@ export const syncFromLakebase = action({
           </div>
         </div>
       </div>
+
+      {/* If Stage 0 (Landing) is selected: Dedicated 10 Ingestion Streams Matrix */}
+      {currentStage.id === 'landing' && (
+        <div className="landing-streams-dossier glass-panel">
+          <div className="landing-streams-header">
+            <div className="title-left">
+              <FileText size={18} className="text-cyan" />
+              <div className="streams-header-text">
+                <h3 className="section-title">
+                  {language === 'zh' 
+                    ? 'Landing 托管卷 10 大上游异构数据流契约全景' 
+                    : language === 'ja'
+                    ? 'Landing Volume 10大上流異種データストリーム契約全景'
+                    : 'Landing Volume 10 Upstream Data Feeds Contract Specification'}
+                </h3>
+                <span className="section-tag font-mono">
+                  UNITY CATALOG VOLUME // /Volumes/helios_ops/helios_landing/
+                </span>
+              </div>
+            </div>
+            <span className="streams-count-badge font-mono">10 FEEDS REGISTERED</span>
+          </div>
+
+          <div className="streams-intro-card">
+            <p>
+              {language === 'zh' ? (
+                <>
+                  上游业务系统将这 10 个数据流以原始文件形式投递到 Unity Catalog 的 Landing Volume（<code>/Volumes/helios_ops/helios_landing/</code>）。
+                  整个模拟系统涵盖了 <strong>3 种存储格式（JSON / Parquet / CSV）</strong>、<strong>4 种投递频次</strong>，并真实注入了<strong>网络延迟、乱序迟到行、CDC 状态流转与 SCD2 历史变更</strong>等企业级典型挑战，为后续 Bronze Auto Loader 摄取提供最贴近真实业务的第一手数据底样：
+                </>
+              ) : language === 'ja' ? (
+                <>
+                  上流業務システムから Unity Catalog の Landing Volume（<code>/Volumes/helios_ops/helios_landing/</code>）に着信する10種の未加工データストリーム。
+                  <strong>3種のファイル形式（JSON / Parquet / CSV）</strong>と<strong>4種の配信頻度</strong>を含み、後続のBronze Auto Loaderによる取り込みの一次入力源となります：
+                </>
+              ) : (
+                <>
+                  Upstream operational applications deliver these 10 feeds as immutable files into the Unity Catalog Landing Volume (<code>/Volumes/helios_ops/helios_landing/</code>).
+                  The pipeline encompasses <strong>3 file formats (JSON / Parquet / CSV)</strong> and <strong>4 ingestion schedules</strong>, intentionally injecting <strong>network latency, late-arriving records, CDC state mutations, and SCD2 dimension changes</strong>:
+                </>
+              )}
+            </p>
+          </div>
+
+          <div className="streams-matrix-grid">
+            {DATA_STREAMS.map((s, idx) => (
+              <div key={s.id} className="stream-card glass-card">
+                <div className="stream-card-header font-mono">
+                  <div className="stream-id-wrap">
+                    <span className="stream-idx">#{String(idx + 1).padStart(2, '0')}</span>
+                    <span className="stream-name text-cyan">{s.name}</span>
+                  </div>
+                  <span className="stream-format-badge">{s.format}</span>
+                </div>
+
+                <div className="stream-meta-line font-mono">
+                  <Clock size={12} className="text-muted" />
+                  <span>{language === 'zh' ? s.frequencyZh : language === 'ja' ? s.frequencyJa : s.frequencyEn}</span>
+                </div>
+
+                <div className="stream-body-content">
+                  <div className="stream-field">
+                    <span className="field-label">{language === 'zh' ? '业务特征与数据挑战:' : 'Data Characteristics & Anomalies:'}</span>
+                    <p className="field-val">
+                      {language === 'zh' ? s.anomalyZh : language === 'ja' ? s.anomalyJa : s.anomalyEn}
+                    </p>
+                  </div>
+                  <div className="stream-field">
+                    <span className="field-label">{language === 'zh' ? 'Medallion 奖牌层治理策略:' : 'Medallion Lakehouse Strategy:'}</span>
+                    <p className="field-val font-mono text-cyan-light">{s.medallionHandling}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Metric Lineage Trace Deep-Dive */}
       <div className="lineage-metric-trace-section glass-panel">
