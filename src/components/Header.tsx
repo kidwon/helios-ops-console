@@ -80,9 +80,6 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="helios-gradient-text">{t.brandTitle}</span>
               <span className="division-badge">{t.brandDivision}</span>
             </div>
-            <div className="brand-subtitle">
-              {t.brandSubtitle}
-            </div>
           </div>
         </div>
 
