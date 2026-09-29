@@ -73,34 +73,6 @@ export const Chapter6AppView: React.FC = () => {
 
   return (
     <div className="chapter6-app-container" id="chapter6-app-view">
-      {/* Production App Showcase Orientation Card */}
-      <div className="db-apps-intro-card">
-        <div className="intro-badge font-mono">
-          <Sparkles size={13} className="text-cyan animate-pulse" />
-          <span>DATABRICKS APPS SHOWCASE // 生产端应用展示</span>
-        </div>
-        <div className="intro-body">
-          <div className="intro-headline">
-            <span className="intro-label font-mono text-cyan">
-              {language === 'zh' ? 'Databricks Lakebase：' : language === 'ja' ? 'Databricks Lakebase：' : 'Databricks Lakebase: '}
-            </span>
-            <span className="intro-main">
-              {language === 'zh'
-                ? '本页面数据直接来源于 Databricks Lakebase（托管 Postgres）数据库，实时呈现六大星际仓储的运营指标。'
-                : language === 'ja'
-                ? 'このページのデータは Databricks Lakebase（マネージド Postgres）データベースから直接取得し、6拠点のリアルタイム運用指標を表示します。'
-                : 'Data on this page is sourced directly from Databricks Lakebase (managed Postgres), displaying real-time operational KPIs across six interplanetary depots.'}
-            </span>
-          </div>
-          <p className="intro-footnote font-mono">
-            {language === 'zh'
-              ? '* 此为前端模拟展示页，还原 Databricks Apps（Streamlit）部署后的原生界面效果'
-              : language === 'ja'
-              ? '* これは Databricks Apps（Streamlit）デプロイ時のネイティブ UI を再現したフロントエンドシミュレーションです'
-              : '* Frontend simulation replicating the native Databricks Apps (Streamlit) UI'}
-          </p>
-        </div>
-      </div>
 
       {/* Databricks Apps Environment Banner */}
       <div className="databricks-app-banner">
