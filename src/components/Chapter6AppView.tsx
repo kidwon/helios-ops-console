@@ -82,22 +82,22 @@ export const Chapter6AppView: React.FC = () => {
         <div className="intro-body">
           <div className="intro-headline">
             <span className="intro-label font-mono text-cyan">
-              {language === 'zh' ? '生产端应用体验：' : language === 'ja' ? '本番アプリケーション体験：' : 'Production App Experience: '}
+              {language === 'zh' ? 'Databricks Apps 原生应用：' : language === 'ja' ? 'Databricks Apps ネイティブアプリ：' : 'Databricks Apps Native: '}
             </span>
             <span className="intro-main">
               {language === 'zh'
-                ? '默认加载，1:1 复刻 Streamlit 生产界面，展示企业级单点点查与实时运营看板。'
+                ? '此页面内嵌的是一个真实部署在 Databricks Apps 平台上的 Streamlit 应用，直连 Lakebase Postgres 实时读取仓储运营数据。'
                 : language === 'ja'
-                ? 'デフォルト表示。Streamlit 本番運用 UI を 1:1 で再現し、エンタープライズ級のポイントルックアップとリアルタイム運用ダッシュボードを提供。'
-                : 'Default view featuring a 1:1 replica of the native Streamlit production interface, showcasing enterprise-grade keyed point lookups and operational monitoring.'}
+                ? 'このページは Databricks Apps 上で稼働する Streamlit アプリを埋め込み表示しています。Lakebase Postgres からリアルタイムでデータを取得します。'
+                : 'This page embeds a live Streamlit app deployed on Databricks Apps, reading real-time depot KPIs directly from Lakebase Postgres.'}
             </span>
           </div>
           <p className="intro-sub">
             {language === 'zh'
-              ? '本页面直观呈现部署在 Databricks Apps 托管环境中的 Python / Streamlit 生产服务。前端连接池低延迟直查 Lakebase 托管 Postgres 表 public.depot_ops_summary，指标口径与上游企业统一度量语义层 100% 严格一致。'
+              ? '访客在此直接操作的是一个生产级 Streamlit 应用：通过 psycopg 连接池低延迟直查 Lakebase（托管 Postgres）表 public.depot_ops_summary，所有指标与 Databricks 上游语义层定义完全一致，无二次加工。'
               : language === 'ja'
-              ? 'Databricks Apps プラットフォーム上で稼働する Python / Streamlit 本番サービスを再現。Lakebase Postgres（public.depot_ops_summary）へ直接クエリを発行し、指標乖離ゼロの運用監視を実現しています。'
-              : 'Demonstrates a real Python / Streamlit service hosted on the Databricks Apps runtime. Queries Lakebase Postgres (public.depot_ops_summary) with sub-10ms latency, perfectly aligned to upstream semantic metric views.'}
+              ? '閲覧者が操作するのは本番 Streamlit アプリそのものです。psycopg 接続プール経由で Lakebase（Postgres）の public.depot_ops_summary を低遅延直接クエリし、上流語義層の指標定義と完全一致します。'
+              : 'Visitors interact directly with a production Streamlit app. It queries public.depot_ops_summary on Lakebase (managed Postgres) via a psycopg connection pool with sub-10ms latency — metrics are identical to the upstream Databricks semantic layer, with zero transformation.'}
           </p>
         </div>
       </div>
