@@ -3223,6 +3223,25 @@ html, body {
   line-height: 1.5;
 }
 
+.st-lineage-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 3px 10px 3px 0;
+  background: none;
+  border: none;
+  color: var(--text-cyan);
+  font-size: 11.5px;
+  cursor: pointer;
+  opacity: 0.75;
+  transition: opacity 0.15s, gap 0.15s;
+}
+.st-lineage-link-btn:hover {
+  opacity: 1;
+  gap: 7px;
+}
+
 /* Streamlit Selectbox Widget */
 .st-widget-block {
   margin-bottom: 22px;

@@ -21,8 +21,8 @@ import {
 type SortKey = keyof DepotRecord;
 type SortDirection = 'asc' | 'desc';
 
-export const Chapter6AppView: React.FC = () => {
-  const { depots, triggerLakebaseSync, language, t } = useHeliosData();
+export const Chapter6AppView: React.FC<{ onViewChange?: (view: 'chapter6' | 'console' | 'lineage') => void }> = ({ onViewChange }) => {
+  const { depots, triggerLakebaseSync, language, t, playUiSound } = useHeliosData();
   const [selectedDepotName, setSelectedDepotName] = useState<string>('Ares Depot');
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({
@@ -88,6 +88,16 @@ export const Chapter6AppView: React.FC = () => {
               ? 'Lakebase Postgres から提供されるリアルタイム拠点ビュー（Resource: lakebase-postgres (helios-ops) · Table: public.depot_ops_summary）。数値は全社統一度量セマンティック層と厳密に一致します。'
               : 'Live depot view served from Lakebase Postgres (Resource: lakebase-postgres (helios-ops) · Table: public.depot_ops_summary). Figures match the curated enterprise semantic layer.'}
           </p>
+          {onViewChange && (
+            <button
+              type="button"
+              className="st-lineage-link-btn font-mono"
+              onClick={() => { playUiSound('beep'); onViewChange('lineage'); }}
+            >
+              <span>{language === 'zh' ? '查看数据血缘' : language === 'ja' ? 'データリネージを見る' : 'View Data Lineage'}</span>
+              <ArrowRight size={12} />
+            </button>
+          )}
         </div>
 
         {/* st.selectbox("Depot", summary["depot"].tolist()) */}

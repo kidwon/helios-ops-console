@@ -21,7 +21,7 @@ export function App() {
 
       {currentView === 'chapter6' ? (
         <main className="helios-dashboard-container">
-          <Chapter6AppView />
+          <Chapter6AppView onViewChange={setCurrentView} />
         </main>
       ) : currentView === 'lineage' ? (
         <main className="helios-dashboard-container">
