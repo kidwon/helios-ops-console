@@ -74,16 +74,6 @@ export const Chapter6AppView: React.FC = () => {
   return (
     <div className="chapter6-app-container" id="chapter6-app-view">
 
-      {/* Databricks Apps Environment Banner */}
-      <div className="databricks-app-banner">
-        <div className="banner-left">
-          <div className="databricks-logo-badge">
-            <span className="db-brick">🧱</span>
-            <span className="db-title">Databricks Apps // Streamlit Runtime</span>
-          </div>
-        </div>
-      </div>
-
       {/* Main Streamlit App Emulation Surface */}
       <div className="streamlit-surface">
         {/* st.title & st.caption */}
