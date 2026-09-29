@@ -81,23 +81,6 @@ export const Chapter6AppView: React.FC = () => {
             <span className="db-brick">🧱</span>
             <span className="db-title">Databricks Apps // Streamlit Runtime</span>
           </div>
-          <span className="app-resource-tag font-mono">Resource: lakebase-postgres (helios-ops)</span>
-          <span className="app-table-tag font-mono">Table: public.depot_ops_summary</span>
-        </div>
-        <div className="banner-right">
-          <div className="connection-pill font-mono">
-            <ShieldCheck size={13} className="text-emerald" />
-            <span>OAuth Connection (psycopg pool · Token recycle &lt; 3000s)</span>
-          </div>
-          <button 
-            type="button"
-            className={`streamlit-refresh-btn ${isRefreshing ? 'spinning' : ''}`}
-            onClick={handleRefresh}
-            title="Re-run query against Lakebase Postgres"
-          >
-            <RefreshCw size={13} className={isRefreshing ? 'animate-spin' : ''} />
-            <span>{isRefreshing ? 'Querying Lakebase...' : 'Rerun'}</span>
-          </button>
         </div>
       </div>
 
@@ -110,10 +93,10 @@ export const Chapter6AppView: React.FC = () => {
           </h1>
           <p className="st-caption">
             {language === 'zh'
-              ? '源自 Lakebase Postgres 的实时仓库运营视图。数据与企业级统一度量语义层严格对齐。'
+              ? '源自 Lakebase Postgres 的实时仓库运营视图（Resource: lakebase-postgres (helios-ops) · Table: public.depot_ops_summary）。数据与企业级统一度量语义层严格对齐。'
               : language === 'ja'
-              ? 'Lakebase Postgres から提供されるリアルタイム拠点ビュー。数値は全社統一度量セマンティック層と厳密に一致します。'
-              : 'Live depot view served from Lakebase Postgres. Figures match the curated enterprise semantic layer.'}
+              ? 'Lakebase Postgres から提供されるリアルタイム拠点ビュー（Resource: lakebase-postgres (helios-ops) · Table: public.depot_ops_summary）。数値は全社統一度量セマンティック層と厳密に一致します。'
+              : 'Live depot view served from Lakebase Postgres (Resource: lakebase-postgres (helios-ops) · Table: public.depot_ops_summary). Figures match the curated enterprise semantic layer.'}
           </p>
         </div>
 
