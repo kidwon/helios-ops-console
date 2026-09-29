@@ -95,7 +95,7 @@ export const Chapter6AppView: React.FC<{ onViewChange?: (view: 'chapter6' | 'con
               onClick={() => { playUiSound('beep'); onViewChange('lineage'); }}
             >
               <span>{language === 'zh' ? '查看数据血缘' : language === 'ja' ? 'データリネージを見る' : 'View Data Lineage'}</span>
-              <ArrowRight size={12} />
+              <span className="arrow-bounce"><ArrowRight size={12} /></span>
             </button>
           )}
         </div>
@@ -323,87 +323,8 @@ export const Chapter6AppView: React.FC<{ onViewChange?: (view: 'chapter6' | 'con
             </table>
           </div>
         </div>
-
-        {/* Python Source Code Inspector Accordion */}
-        <div className="st-code-disclosure">
-          <details className="st-details">
-            <summary className="st-summary font-mono">
-              <Terminal size={14} className="text-cyan" />
-              <span>{language === 'zh' ? '查看 Databricks Apps 生产端代码 app.py (Click to inspect app.py)' : language === 'ja' ? 'Databricks Apps 本番コード app.py を表示 (Click to inspect app.py)' : 'Inspect Databricks Apps app.py Source Code'}</span>
-            </summary>
-            <div className="st-code-box">
-              <pre className="font-mono">
-                <code>{`# Databricks Apps / Streamlit Production Service: app.py
-import os
-import pandas as pd
-import psycopg
-import streamlit as st
-from psycopg_pool import ConnectionPool
-from databricks.sdk import WorkspaceClient
-
-SUMMARY_TABLE = os.environ.get("SUMMARY_TABLE", "public.depot_ops_summary")
-st.set_page_config(page_title="Helios Depot Operations Console", page_icon="🛰️", layout="wide")
-workspace = WorkspaceClient()
-
-class OAuthConnection(psycopg.Connection):
-    @classmethod
-    def connect(cls, conninfo="", **kwargs):
-        token = workspace.postgres.generate_database_credential(
-            endpoint=os.environ["ENDPOINT_NAME"]
-        ).token
-        kwargs["password"] = token
-        return super().connect(conninfo, **kwargs)
-
-@st.cache_resource
-def get_pool():
-    user = os.environ.get("PGUSER") or os.environ["DATABRICKS_CLIENT_ID"]
-    conninfo = (
-        f"host={os.environ['PGHOST']} port={os.environ.get('PGPORT', '5432')} "
-        f"dbname={os.environ.get('PGDATABASE', 'databricks_postgres')} "
-        f"user={user} sslmode={os.environ.get('PGSSLMODE', 'require')}"
-    )
-    return ConnectionPool(
-        conninfo=conninfo,
-        connection_class=OAuthConnection,
-        min_size=1, max_size=5, max_lifetime=3000, open=True,
-    )
-
-def query(sql, params=None):
-    with get_pool().connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(sql, params or ())
-            columns = [c.name for c in cur.description]
-            rows = cur.fetchall()
-    return pd.DataFrame(rows, columns=columns)
-
-st.title("🛰️ Helios Depot Operations Console")
-st.caption("Live depot view served from Lakebase. Figures match the enterprise semantic layer.")
-
-summary = query(f"SELECT * FROM {SUMMARY_TABLE} ORDER BY revenue DESC")
-depot = st.selectbox("Depot", summary["depot"].tolist())
-row = summary[summary["depot"] == depot].iloc[0]
-
-st.subheader(f"{row['depot']}  ({row['warehouse_id']}, {row['depot_body']}, {row['depot_region']})")
-
-top = st.columns(4)
-top[0].metric("Revenue (CREDITS)", f"{float(row['revenue']):,.0f}")
-top[1].metric("Gross margin rate", f"{float(row['gross_margin_rate']):.1%}")
-top[2].metric("Orders", f"{int(row['orders']):,}")
-top[3].metric("Cancellation rate", f"{float(row['cancellation_rate']):.2%}")
-
-bottom = st.columns(4)
-bottom[0].metric("On time rate", f"{float(row['on_time_rate']):.1%}")
-bottom[1].metric("Backordered orders", f"{int(row['backordered_orders']):,}")
-bottom[2].metric("Stockout events", f"{int(row['stockout_events']):,}")
-bottom[3].metric("Units shipped", f"{int(row['units_out']):,}")
-
-st.subheader("All depots")
-st.dataframe(summary, use_container_width=True, hide_index=True)`}</code>
-              </pre>
-            </div>
-          </details>
-        </div>
       </div>
     </div>
+
   );
 };

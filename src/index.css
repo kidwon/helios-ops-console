@@ -3226,20 +3226,30 @@ html, body {
 .st-lineage-link-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-top: 8px;
-  padding: 3px 10px 3px 0;
-  background: none;
-  border: none;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 4px 12px 4px 10px;
+  background: rgba(0, 229, 255, 0.06);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-radius: 20px;
   color: var(--text-cyan);
-  font-size: 11.5px;
+  font-size: 12px;
   cursor: pointer;
-  opacity: 0.75;
-  transition: opacity 0.15s, gap 0.15s;
+  opacity: 0.9;
+  transition: opacity 0.2s, background 0.2s, border-color 0.2s;
 }
 .st-lineage-link-btn:hover {
   opacity: 1;
-  gap: 7px;
+  background: rgba(0, 229, 255, 0.12);
+  border-color: rgba(0, 229, 255, 0.5);
+}
+.st-lineage-link-btn .arrow-bounce {
+  display: inline-flex;
+  animation: arrow-nudge 1.6s ease-in-out infinite;
+}
+@keyframes arrow-nudge {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(4px); }
 }
 
 /* Streamlit Selectbox Widget */
