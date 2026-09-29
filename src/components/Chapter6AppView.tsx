@@ -82,22 +82,22 @@ export const Chapter6AppView: React.FC = () => {
         <div className="intro-body">
           <div className="intro-headline">
             <span className="intro-label font-mono text-cyan">
-              {language === 'zh' ? 'Databricks Apps 界面模拟：' : language === 'ja' ? 'Databricks Apps UI シミュレーション：' : 'Databricks Apps UI Simulation: '}
+              {language === 'zh' ? 'Databricks Lakebase：' : language === 'ja' ? 'Databricks Lakebase：' : 'Databricks Lakebase: '}
             </span>
             <span className="intro-main">
               {language === 'zh'
-                ? '本页面用前端技术 1:1 还原了部署在 Databricks Apps 平台上的 Streamlit 应用界面，所有数据均来自同一套云仓库数据源。'
+                ? '本页面数据直接来源于 Databricks Lakebase（托管 Postgres）数据库，实时呈现六大星际仓储的运营指标。'
                 : language === 'ja'
-                ? 'このページはフロントエンド技術で Databricks Apps 上の Streamlit 应用を 1:1 再現したシミュレーションです。同一のクラウドデータソースからデータを取得します。'
-                : 'A frontend simulation that recreates the Streamlit UI of a real Databricks Apps deployment, driven by the same cloud data source.'}
+                ? 'このページのデータは Databricks Lakebase（マネージド Postgres）データベースから直接取得し、6拠点のリアルタイム運用指標を表示します。'
+                : 'Data on this page is sourced directly from Databricks Lakebase (managed Postgres), displaying real-time operational KPIs across six interplanetary depots.'}
             </span>
           </div>
-          <p className="intro-sub">
+          <p className="intro-footnote font-mono">
             {language === 'zh'
-              ? '这是一个用 React 实现的界面模拟，展示如果将该看板部署为实际 Databricks Apps（Streamlit）应用时的原生效果。前端通过 Convex 赤道读取仃库 Postgres（Lakebase）中的实时指标，指标口径与上游语义层完全一致。'
+              ? '* 此为前端模拟展示页，还原 Databricks Apps（Streamlit）部署后的原生界面效果'
               : language === 'ja'
-              ? 'これは React で構築した UI シミュレーションです。実際に Databricks Apps（Streamlit）としてデプロイした際のネイティブ表示を再現します。Convex 経由で Lakebase Postgres のリアルタイム指標を取得します。'
-              : 'This is a React-based UI simulation demonstrating what the dashboard looks like when deployed as a native Databricks Apps (Streamlit) application. Live metrics are fetched via Convex from the same Lakebase Postgres source, with zero metric drift.'}
+              ? '* これは Databricks Apps（Streamlit）デプロイ時のネイティブ UI を再現したフロントエンドシミュレーションです'
+              : '* Frontend simulation replicating the native Databricks Apps (Streamlit) UI'}
           </p>
         </div>
       </div>

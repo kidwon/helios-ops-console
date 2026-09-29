@@ -3089,6 +3089,14 @@ html, body {
   margin: 0;
 }
 
+.db-apps-intro-card .intro-footnote {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  opacity: 0.55;
+  margin: 6px 0 0;
+  letter-spacing: 0.01em;
+}
+
 /* Databricks Apps Environment Banner */
 .databricks-app-banner {
   background: linear-gradient(90deg, #0d1527 0%, #131f37 60%, #0d1527 100%);
