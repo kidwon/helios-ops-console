@@ -9,24 +9,30 @@ import {
   Sliders, 
   Globe, 
   Layers, 
-  Cpu
+  Cpu,
+  Database
 } from 'lucide-react';
 
 interface HeaderProps {
   onToggleDevPanel: () => void;
   isDevPanelOpen: boolean;
-  currentView?: 'chapter6' | 'console' | 'lineage';
-  onViewChange?: (view: 'chapter6' | 'console' | 'lineage') => void;
+  activeSection?: string;
+  onScrollToSection?: (sectionId: string) => void;
+  // Legacy support
+  currentView?: string;
+  onViewChange?: (view: any) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
   onToggleDevPanel, 
   isDevPanelOpen,
-  currentView = 'console',
+  activeSection = 'section-overview',
+  onScrollToSection,
+  currentView,
   onViewChange
 }) => {
   const { 
-    triggerLakebaseSync,
+    triggerLakebaseSync, 
     soundEnabled, 
     setSoundEnabled,
     language,
@@ -48,6 +54,20 @@ export const Header: React.FC<HeaderProps> = ({
     setLanguage(lang);
   };
 
+  const handleSectionJump = (sectionId: string, fallbackView?: any) => {
+    playUiSound('beep');
+    if (onScrollToSection) {
+      onScrollToSection(sectionId);
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else if (onViewChange && fallbackView) {
+        onViewChange(fallbackView);
+      }
+    }
+  };
+
   return (
     <header className="helios-header glass-card">
       <div className="header-left">
@@ -66,46 +86,47 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* View Switcher: Databricks Apps vs Operations Console vs Data Lineage Provenance */}
-        {onViewChange && (
-          <div className="view-mode-tabs" role="tablist">
-            <button
-              type="button"
-              className={`view-tab-btn ${currentView === 'chapter6' ? 'active' : ''}`}
-              onClick={() => { playUiSound('beep'); onViewChange('chapter6'); }}
-              role="tab"
-              aria-selected={currentView === 'chapter6'}
-              id="tab-chapter6"
-              title="Databricks Apps / Streamlit Console"
-            >
-              <Cpu size={13} />
-              <span>{t.navChapter6}</span>
-            </button>
-            <button
-              type="button"
-              className={`view-tab-btn ${currentView === 'console' ? 'active' : ''}`}
-              onClick={() => { playUiSound('beep'); onViewChange('console'); }}
-              role="tab"
-              aria-selected={currentView === 'console'}
-              id="tab-console"
-              title={t.navConsole}
-            >
-              <Globe size={13} />
-              <span>{t.navConsole}</span>
-            </button>
-            <button
-              type="button"
-              className={`view-tab-btn ${currentView === 'lineage' ? 'active' : ''}`}
-              onClick={() => { playUiSound('beep'); onViewChange('lineage'); }}
-              role="tab"
-              aria-selected={currentView === 'lineage'}
-              id="tab-lineage"
-            >
-              <Layers size={13} />
-              <span>{t.navLineage}</span>
-            </button>
-          </div>
-        )}
+        {/* View Mode Anchor Tabs for Single Page Storytelling */}
+        <div className="view-mode-tabs" role="tablist">
+          <button
+            type="button"
+            className={`view-tab-btn ${activeSection === 'section-overview' || currentView === 'console' ? 'active' : ''}`}
+            onClick={() => handleSectionJump('section-overview', 'console')}
+            role="tab"
+            aria-selected={activeSection === 'section-overview' || currentView === 'console'}
+            id="tab-overview"
+            title={t.navConsole}
+          >
+            <Globe size={13} />
+            <span>{t.navConsole}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`view-tab-btn ${activeSection === 'section-data-app' || currentView === 'chapter6' ? 'active' : ''}`}
+            onClick={() => handleSectionJump('section-data-app', 'chapter6')}
+            role="tab"
+            aria-selected={activeSection === 'section-data-app' || currentView === 'chapter6'}
+            id="tab-data-app"
+            title={t.navChapter6}
+          >
+            <Database size={13} />
+            <span>{t.navChapter6}</span>
+          </button>
+
+          <button
+            type="button"
+            className={`view-tab-btn ${activeSection === 'section-lineage' || currentView === 'lineage' ? 'active' : ''}`}
+            onClick={() => handleSectionJump('section-lineage', 'lineage')}
+            role="tab"
+            aria-selected={activeSection === 'section-lineage' || currentView === 'lineage'}
+            id="tab-lineage"
+            title={t.navLineage}
+          >
+            <Layers size={13} />
+            <span>{t.navLineage}</span>
+          </button>
+        </div>
       </div>
 
       <div className="header-right">

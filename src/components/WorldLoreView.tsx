@@ -34,9 +34,10 @@ import {
 
 interface WorldLoreViewProps {
   onViewChange?: (view: 'chapter6' | 'console' | 'lineage') => void;
+  onScrollToSection?: (sectionId: string) => void;
 }
 
-export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) => {
+export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onScrollToSection }) => {
   const { 
     depots, 
     selectedDepot, 
@@ -383,28 +384,40 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange }) =>
 
         {/* Action Pathway Strip */}
         <div className="world-hero-actions">
-          {onViewChange && (
-            <div className="quick-nav-links">
-              <button
-                type="button"
-                className="lore-nav-btn primary"
-                onClick={() => { playUiSound('beep'); onViewChange('chapter6'); }}
-              >
-                <Cpu size={14} />
-                <span>{language === 'zh' ? '体验 Databricks Apps 原生应用' : 'Open Databricks Apps View'}</span>
-                <ArrowRight size={13} />
-              </button>
-              <button
-                type="button"
-                className="lore-nav-btn secondary"
-                onClick={() => { playUiSound('beep'); onViewChange('lineage'); }}
-              >
-                <Layers size={14} />
-                <span>{language === 'zh' ? '查看 Lakehouse 架构与 SQL 代码' : 'Inspect Pipeline Lineage & SQL'}</span>
-                <ArrowRight size={13} />
-              </button>
-            </div>
-          )}
+          <div className="quick-nav-links">
+            <button
+              type="button"
+              className="lore-nav-btn primary"
+              onClick={() => {
+                playUiSound('beep');
+                if (onScrollToSection) {
+                  onScrollToSection('section-data-app');
+                } else {
+                  document.getElementById('section-data-app')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              <Database size={14} />
+              <span>{language === 'zh' ? '前往实时仓库运营应用 ↓' : language === 'ja' ? 'リアルタイム拠点アプリへ ↓' : 'Go to Live Operations App ↓'}</span>
+              <ArrowRight size={13} />
+            </button>
+            <button
+              type="button"
+              className="lore-nav-btn secondary"
+              onClick={() => {
+                playUiSound('beep');
+                if (onScrollToSection) {
+                  onScrollToSection('section-lineage');
+                } else {
+                  document.getElementById('section-lineage')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              <Layers size={14} />
+              <span>{language === 'zh' ? '查看全链路数据血缘与治理架构 ↓' : language === 'ja' ? 'データリネージと統治構造を見る ↓' : 'Inspect Pipeline Lineage & Governance ↓'}</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
         </div>
       </section>
 
