@@ -552,54 +552,6 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
 
 
 
-      {/* Incident Dossier Banner & Interactive Controls */}
-      <section className="world-section">
-        <div className="incident-dossier-panel glass-card">
-          <div className="incident-dossier-header">
-            <div className="incident-title-group">
-              <div className="incident-badge-row">
-                <span className="incident-alert-badge">
-                  <AlertTriangle size={14} className="text-solar" />
-                  <span className="font-mono">INCIDENT DOSSIER #2287-MARS-B3</span>
-                </span>
-                <span className="incident-status-tag font-mono">
-                  {isAresIncident 
-                    ? (language === 'zh' ? '🚨 故障生效中 (ACTIVE INCIDENT)' : '🚨 INCIDENT ACTIVE') 
-                    : (language === 'zh' ? '✅ 已恢复基准 (NOMINAL BASELINE)' : '✅ NOMINAL')}
-                </span>
-              </div>
-              <h2 className="incident-headline">
-                {language === 'zh'
-                  ? '核心业务故障还原：火星 Ares 仓「批次 3」瑕疵件利润失控危机'
-                  : language === 'ja'
-                  ? '中核インシデント詳細：火星 Ares 拠点「バッチ 3」部品欠陥による粗利急落'
-                  : 'Critical Incident Dossier: Mars Ares Depot Batch 3 Propulsion Defect Drag'}
-              </h2>
-            </div>
-
-            {/* Interactive Drill Buttons */}
-            <div className="incident-interactive-actions">
-              <button
-                type="button"
-                className={`incident-action-btn btn-trigger ${isAresIncident ? 'active' : ''}`}
-                onClick={() => { playUiSound('alert'); toggleAresMarginIncident(false); }}
-              >
-                <TrendingDown size={14} />
-                <span>{language === 'zh' ? '触发 Ares 利润暴跌 (23%)' : 'Trigger Ares Drop (23%)'}</span>
-              </button>
-              <button
-                type="button"
-                className={`incident-action-btn btn-restore ${!isAresIncident ? 'active' : ''}`}
-                onClick={() => { playUiSound('success'); toggleAresMarginIncident(true); }}
-              >
-                <CheckCircle2 size={14} />
-                <span>{language === 'zh' ? '恢复 Ares 至正常指标 (38%)' : 'Restore Ares (38%)'}</span>
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
       {/* 3. 10 Simulated Upstream Telemetry Streams Specification */}
       <section className="world-section">
         <div className="section-title-bar">
