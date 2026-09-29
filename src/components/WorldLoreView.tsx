@@ -335,7 +335,6 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
 
           <h1 className="world-hero-title">
             Helios Trading Corporation
-            <span className="world-title-sub">赫利俄斯跨行星贸易联合体</span>
           </h1>
 
           <p className="world-hero-lead">
