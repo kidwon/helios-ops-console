@@ -130,7 +130,7 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
             type="button"
             className="ops-lineage-btn font-mono"
             onClick={handleGoToLineage}
-            title={language === 'zh' ? '滚动查看底层数据血缘与治理流向' : 'Scroll to Data Lineage Architecture'}
+            title={language === 'zh' ? '滚动查看底层数据血缘与治理流向' : language === 'ja' ? 'データリネージと統治構造へスクロール' : 'Scroll to Data Lineage Architecture'}
           >
             <span>{language === 'zh' ? '查看数据血缘' : language === 'ja' ? 'データリネージを見る' : 'View Data Lineage'}</span>
             <span className="arrow-bounce"><ArrowRight size={13} /></span>
@@ -140,10 +140,14 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
             type="button"
             className={`ops-refresh-btn ${isRefreshing ? 'syncing' : ''}`}
             onClick={handleRefresh}
-            title={language === 'zh' ? '从 Lakebase Postgres 同步最新快照' : 'Refresh from Lakebase Postgres'}
+            title={language === 'zh' ? '从 Lakebase Postgres 同步最新快照' : language === 'ja' ? 'Lakebase Postgres から最新スナップショットを同期' : 'Refresh from Lakebase Postgres'}
           >
             <RefreshCw size={14} className={isRefreshing ? 'spin-icon' : ''} />
-            <span className="font-mono">{isRefreshing ? 'SYNCING...' : 'REFRESH'}</span>
+            <span className="font-mono">
+              {isRefreshing 
+                ? (language === 'zh' ? '同步中...' : language === 'ja' ? '同期中...' : 'SYNCING...') 
+                : (language === 'zh' ? '刷新快照' : language === 'ja' ? '更新' : 'REFRESH')}
+            </span>
           </button>
         </div>
       </div>
@@ -175,7 +179,7 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
         </div>
 
         <div className="ops-current-tag font-mono">
-          <span className="tag-key">CURRENT_FOCUS:</span>
+          <span className="tag-key">{language === 'zh' ? '当前聚焦:' : language === 'ja' ? 'フォーカス拠点:' : 'CURRENT_FOCUS:'}</span>
           <span className="tag-val text-cyan">{selectedDepot.depot}</span>
           <span className="tag-body">[{selectedDepot.depot_body} · {selectedDepot.depot_region}]</span>
         </div>
@@ -226,7 +230,10 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               <span className="kpi-unit font-mono">CREDITS</span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Margin: {Number(selectedDepot.gross_margin).toLocaleString('en-US', { maximumFractionDigits: 0 })} Cr</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '毛利额: ' : language === 'ja' ? '粗利額: ' : 'Margin: '}
+                {Number(selectedDepot.gross_margin).toLocaleString('en-US', { maximumFractionDigits: 0 })} Cr
+              </span>
             </div>
           </div>
 
@@ -245,9 +252,13 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
             </div>
             <div className="kpi-footer font-mono">
               {isAresIncident ? (
-                <span className="kpi-alert-tag text-solar font-bold">⚠️ DRAGGED BY BATCH 3</span>
+                <span className="kpi-alert-tag text-solar font-bold">
+                  {language === 'zh' ? '⚠️ 受批次3异常拖累' : language === 'ja' ? '⚠️ ロット3欠陥による低下' : '⚠️ DRAGGED BY BATCH 3'}
+                </span>
               ) : (
-                <span className="kpi-healthy-tag text-emerald font-bold">✓ HEALTHY (&gt;38%)</span>
+                <span className="kpi-healthy-tag text-emerald font-bold">
+                  {language === 'zh' ? '✓ 指标健康 (>38%)' : language === 'ja' ? '✓ 健全稼働 (>38%)' : '✓ HEALTHY (>38%)'}
+                </span>
               )}
             </div>
           </div>
@@ -264,10 +275,15 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               <span className="kpi-number font-mono text-cyan">
                 {selectedDepot.orders.toLocaleString()}
               </span>
-              <span className="kpi-unit font-mono">ORDERS</span>
+              <span className="kpi-unit font-mono">
+                {language === 'zh' ? '单' : language === 'ja' ? '件' : 'ORDERS'}
+              </span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Units Sold: {selectedDepot.units_sold.toLocaleString()}</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '已售总件数: ' : language === 'ja' ? '販売ユニット: ' : 'Units Sold: '}
+                {selectedDepot.units_sold.toLocaleString()}
+              </span>
             </div>
           </div>
 
@@ -285,7 +301,9 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               </span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Target: &lt; 2.50%</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '风控目标: < 2.50%' : language === 'ja' ? '目標基準: < 2.50%' : 'Target: < 2.50%'}
+              </span>
             </div>
           </div>
 
@@ -303,7 +321,9 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               </span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Astro-Logistics SLA: 90%</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '航天物流 SLA: 90%' : language === 'ja' ? '物流SLA基準: 90%' : 'Astro-Logistics SLA: 90%'}
+              </span>
             </div>
           </div>
 
@@ -319,10 +339,14 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               <span className="kpi-number font-mono text-solar">
                 {selectedDepot.backordered_orders.toLocaleString()}
               </span>
-              <span className="kpi-unit font-mono">QUEUED</span>
+              <span className="kpi-unit font-mono">
+                {language === 'zh' ? '排队中' : language === 'ja' ? '待機中' : 'QUEUED'}
+              </span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Pending replenishment</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '等待补货调拨中' : language === 'ja' ? '拠点補充待機中' : 'Pending replenishment'}
+              </span>
             </div>
           </div>
 
@@ -338,10 +362,14 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               <span className={`kpi-number font-mono ${selectedDepot.stockout_events > 40 ? 'text-crimson' : 'text-slate-200'}`}>
                 {selectedDepot.stockout_events.toLocaleString()}
               </span>
-              <span className="kpi-unit font-mono">EVENTS</span>
+              <span className="kpi-unit font-mono">
+                {language === 'zh' ? '次' : language === 'ja' ? '回' : 'EVENTS'}
+              </span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Buffer alert threshold: 40</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '库存缓冲告警线: 40' : language === 'ja' ? '在庫アラート閾値: 40' : 'Buffer alert threshold: 40'}
+              </span>
             </div>
           </div>
 
@@ -357,10 +385,14 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               <span className="kpi-number font-mono text-cyan">
                 {selectedDepot.units_out.toLocaleString()}
               </span>
-              <span className="kpi-unit font-mono">UNITS</span>
+              <span className="kpi-unit font-mono">
+                {language === 'zh' ? '件' : language === 'ja' ? '個' : 'UNITS'}
+              </span>
             </div>
             <div className="kpi-footer font-mono">
-              <span className="kpi-subtext">Telemetry verified</span>
+              <span className="kpi-subtext">
+                {language === 'zh' ? '遥测通道核验确认' : language === 'ja' ? 'テレメトリ検証完了' : 'Telemetry verified'}
+              </span>
             </div>
           </div>
         </div>
@@ -375,7 +407,9 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
               <h3 className="ops-table-title font-mono">
                 {language === 'zh' ? '全基地运营指标汇总矩阵' : language === 'ja' ? '全拠点運営メトリクス集計マトリクス' : 'Depot Operations Master Summary'}
               </h3>
-              <span className="ops-table-badge font-mono">6 DEPOTS ACTIVE</span>
+              <span className="ops-table-badge font-mono">
+                {language === 'zh' ? '6 大基地在线' : language === 'ja' ? '6拠点オンライン' : '6 DEPOTS ACTIVE'}
+              </span>
             </div>
             <p className="ops-sql-caption font-mono">
               SELECT * FROM public.depot_ops_summary ORDER BY {sortConfig.key} {sortConfig.direction.toUpperCase()}
@@ -412,7 +446,7 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
                       key={col.key}
                       className={`ops-th ${col.align === 'right' ? 'text-right' : ''} ${isSorted ? 'ops-th-active' : ''}`}
                       onClick={() => handleSort(col.key)}
-                      title={`Click to sort by ${col.label}`}
+                      title={language === 'zh' ? `点击按 ${col.label} 排序` : language === 'ja' ? `クリックして ${col.label} でソート` : `Click to sort by ${col.label}`}
                     >
                       <div className={`ops-th-inner ${col.align === 'right' ? 'justify-end' : 'justify-start'}`}>
                         <span>{col.label}</span>
@@ -445,7 +479,7 @@ export const Chapter6AppView: React.FC<Chapter6AppViewProps> = ({
                       playUiSound('beep');
                       setSelectedDepotName(row.depot);
                     }}
-                    title={language === 'zh' ? `点击切换并聚焦 ${row.depot}` : `Click to focus ${row.depot}`}
+                    title={language === 'zh' ? `点击切换并聚焦 ${row.depot}` : language === 'ja' ? `クリックして ${row.depot} にフォーカス` : `Click to focus ${row.depot}`}
                   >
                     <td className="text-cyan font-bold">{row.warehouse_id}</td>
                     <td className="font-bold text-white">

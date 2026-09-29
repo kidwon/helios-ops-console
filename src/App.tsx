@@ -129,7 +129,7 @@ export function App() {
           type="button"
           className="back-to-top-hud font-mono"
           onClick={scrollToTop}
-          title={language === 'zh' ? '返回顶部' : 'Back to top'}
+          title={language === 'zh' ? '返回顶部' : language === 'ja' ? 'トップへ戻る' : 'Back to top'}
         >
           <ArrowUp size={16} />
           <span>TOP</span>

@@ -23,7 +23,8 @@ export const DevControlHUD: React.FC<DevControlHUDProps> = ({ isOpen, onClose })
     triggerLakebaseSync, 
     toggleAresMarginIncident, 
     resetToCanonical, 
-    t 
+    t,
+    language 
   } = useHeliosData();
 
   const [activeTab, setActiveTab] = useState<'SCENARIOS' | 'ARCHITECTURE' | 'SQL'>('SCENARIOS');
@@ -179,39 +180,129 @@ export const DevControlHUD: React.FC<DevControlHUDProps> = ({ isOpen, onClose })
               <div className="arch-layer-card">
                 <div className="arch-layer-title">
                   <span className="layer-num">1</span>
-                  <span>ENTERPRISE DATA TRUTH (DATABRICKS)</span>
+                  <span>
+                    {language === 'zh'
+                      ? '企业级权威数据源 (DATABRICKS)'
+                      : language === 'ja'
+                      ? '全社信頼のデータ基盤 (DATABRICKS)'
+                      : 'ENTERPRISE DATA TRUTH (DATABRICKS)'}
+                  </span>
                 </div>
                 <ul className="arch-list">
-                  <li>Medallion architecture (Bronze &rarr; Silver &rarr; Gold)</li>
-                  <li>Unity Catalog Metric Views (sales_mv, orders_mv, inventory_mv)</li>
-                  <li>Curated serving table: <code className="font-mono">depot_ops_summary</code> with CDF</li>
-                  <li>Hosted on Lakebase Managed Postgres with scale-to-zero compute</li>
+                  <li>
+                    {language === 'zh'
+                      ? 'Medallion 奖牌层治理架构（Bronze 原始 -> Silver 清洗 -> Gold 星型模型）'
+                      : language === 'ja'
+                      ? 'メダリオン階層アーキテクチャ（Bronze 生 -> Silver 整合 -> Gold 分析）'
+                      : 'Medallion architecture (Bronze -> Silver -> Gold)'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? 'Unity Catalog 统一度量语义视图（sales_mv, orders_mv, inventory_mv）'
+                      : language === 'ja'
+                      ? 'Unity Catalog 統一セマンティック層（sales_mv, orders_mv, inventory_mv）'
+                      : 'Unity Catalog Metric Views (sales_mv, orders_mv, inventory_mv)'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '生产级权威宽表：启用 CDF 变更数据捕获的 depot_ops_summary'
+                      : language === 'ja'
+                      ? '運用サービングテーブル：CDF付き depot_ops_summary（6拠点に集約）'
+                      : 'Curated serving table: depot_ops_summary with CDF'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '托管于 Lakebase Postgres，零请求时自动缩容（Scale-to-zero）'
+                      : language === 'ja'
+                      ? 'Lakebase マネージドPostgres、アクセス待機時の自動スケールゼロ対応'
+                      : 'Hosted on Lakebase Managed Postgres with scale-to-zero compute'}
+                  </li>
                 </ul>
               </div>
 
               <div className="arch-layer-card">
                 <div className="arch-layer-title">
                   <span className="layer-num">2</span>
-                  <span>REACTIVE EDGE BUFFER (CONVEX CLOUD)</span>
+                  <span>
+                    {language === 'zh'
+                      ? '反应式边缘缓冲网格 (CONVEX CLOUD)'
+                      : language === 'ja'
+                      ? 'リアクティブエッジバッファ (CONVEX CLOUD)'
+                      : 'REACTIVE EDGE BUFFER (CONVEX CLOUD)'}
+                  </span>
                 </div>
                 <ul className="arch-list">
-                  <li>Dedicated least-privilege service user (<code className="font-mono">convex_reader</code>)</li>
-                  <li>1-minute scheduled action + webhook on-demand ingestion</li>
-                  <li>Diff-based memory state store; completely shields Lakebase from traffic spikes</li>
-                  <li>Full-duplex WebSocket push gateway to all connected browsers</li>
+                  <li>
+                    {language === 'zh'
+                      ? '专设最小权限安全用户（convex_reader），严格防范越权'
+                      : language === 'ja'
+                      ? '最小権限セキュリティアカウント（convex_reader）による安全な接続'
+                      : 'Dedicated least-privilege service user (convex_reader)'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '1 分钟定时拉取 + Webhook 瞬时增量摄取双通道'
+                      : language === 'ja'
+                      ? '1分間隔の定期ポーリング＋Webhook即時通知のハイブリッド受信'
+                      : '1-minute scheduled action + webhook on-demand ingestion'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '差分内存状态机；完全隔离 Lakebase 免受高并发流量冲击'
+                      : language === 'ja'
+                      ? '差分インメモリストア；高負荷アクセスからLakebaseを完全防護'
+                      : 'Diff-based memory state store; completely shields Lakebase from traffic spikes'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '全双工 WebSocket 长连接向全网浏览器毫秒级广播'
+                      : language === 'ja'
+                      ? '全二重WebSocketにより、全ブラウザへミリ秒単位でリアルタイム配信'
+                      : 'Full-duplex WebSocket push gateway to all connected browsers'}
+                  </li>
                 </ul>
               </div>
 
               <div className="arch-layer-card">
                 <div className="arch-layer-title">
                   <span className="layer-num">3</span>
-                  <span>RESPONSIVE IMMERSIVE CONSOLE (MODERN WEB)</span>
+                  <span>
+                    {language === 'zh'
+                      ? '沉浸式低延迟操作台 (MODERN WEB)'
+                      : language === 'ja'
+                      ? 'リアルタイム運用コンソール (MODERN WEB)'
+                      : 'RESPONSIVE IMMERSIVE CONSOLE (MODERN WEB)'}
+                  </span>
                 </div>
                 <ul className="arch-list">
-                  <li>Reactive subscriptions: zero polling, zero manual refresh</li>
-                  <li>Sub-50ms first paint directly from distributed edge cache</li>
-                  <li>Micro-animations on real-time metric diffs</li>
-                  <li>Write path: optimistic updates for dispatch commands</li>
+                  <li>
+                    {language === 'zh'
+                      ? '反应式订阅驱动：零轮询、零手动刷新、全自动状态同步'
+                      : language === 'ja'
+                      ? 'リアクティブ購読駆動：ポーリング不要、手動更新不要の自動同期'
+                      : 'Reactive subscriptions: zero polling, zero manual refresh'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '边缘分布式缓存首屏亚秒级瞬时渲染（Sub-50ms First Paint）'
+                      : language === 'ja'
+                      ? 'エッジ分散キャッシュによるサブ50ミリ秒の超高速ファーストペイント'
+                      : 'Sub-50ms first paint directly from distributed edge cache'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '数据流微动效感知（Micro-animations）实时呈现指标脉动'
+                      : language === 'ja'
+                      ? '差分アニメーションによる指標変化の直感的な視覚化'
+                      : 'Micro-animations on real-time metric diffs'}
+                  </li>
+                  <li>
+                    {language === 'zh'
+                      ? '回写链路：紧急调度指令采用乐观更新（Optimistic Updates）秒级闭环'
+                      : language === 'ja'
+                      ? '書き込みパス：緊急ディスパッチ指令の楽観的更新による即時フィードバック'
+                      : 'Write path: optimistic updates for dispatch commands'}
+                  </li>
                 </ul>
               </div>
             </div>

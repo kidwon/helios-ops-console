@@ -661,14 +661,20 @@ export const syncFromLakebase = action({
 
                 <div className="stream-body-content">
                   <div className="stream-field">
-                    <span className="field-label">{language === 'zh' ? '业务特征与数据挑战:' : 'Data Characteristics & Anomalies:'}</span>
+                    <span className="field-label">
+                      {language === 'zh' ? '业务特征与数据挑战:' : language === 'ja' ? 'データ特性と品質課題:' : 'Data Characteristics & Anomalies:'}
+                    </span>
                     <p className="field-val">
                       {language === 'zh' ? s.anomalyZh : language === 'ja' ? s.anomalyJa : s.anomalyEn}
                     </p>
                   </div>
                   <div className="stream-field">
-                    <span className="field-label">{language === 'zh' ? 'Medallion 奖牌层治理策略:' : 'Medallion Lakehouse Strategy:'}</span>
-                    <p className="field-val font-mono text-cyan-light">{s.medallionHandling}</p>
+                    <span className="field-label">
+                      {language === 'zh' ? 'Medallion 奖牌层治理策略:' : language === 'ja' ? 'メダリオン階層処理方針:' : 'Medallion Lakehouse Strategy:'}
+                    </span>
+                    <p className="field-val font-mono text-cyan-light">
+                      {language === 'zh' ? s.medallionHandlingZh : language === 'ja' ? s.medallionHandlingJa : s.medallionHandlingEn}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -725,31 +731,61 @@ export const syncFromLakebase = action({
               <div className="pathway-node">
                 <span className="node-stage">STAGE 0: LANDING</span>
                 <span className="node-entity font-mono">order_lines/*.json<br/>price_list/*.csv</span>
-                <span className="node-desc">购买数量与带有生效起止日期的定价成本单</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '购买数量与带有生效起止日期的定价成本单'
+                    : language === 'ja'
+                    ? '購入数量と有効期間付き価格・原価マスタ'
+                    : 'Raw purchase quantities and effective-dated unit price/cost schedules'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 2: SILVER</span>
                 <span className="node-entity font-mono">silver_price_scd<br/>(SCD Type 2)</span>
-                <span className="node-desc">按 effective_from ~ effective_to 维护全部价格版本</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '按 effective_from ~ effective_to 维护全部价格版本'
+                    : language === 'ja'
+                    ? 'effective_from 〜 effective_to で全価格履歴バージョンを管理'
+                    : 'Maintains complete price history across effective_from ~ effective_to'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 3: GOLD</span>
                 <span className="node-entity font-mono">fact_order_lines</span>
-                <span className="node-desc">下单时刻时点 Join：line_gross_margin = quantity * (price - cost)</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '下单时刻时点 Join：line_gross_margin = quantity * (price - cost)'
+                    : language === 'ja'
+                    ? '発注時点Point-in-Time結合: line_gross_margin = quantity * (price - cost)'
+                    : 'Point-in-time join at order placement: line_gross_margin = quantity * (price - cost)'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 4: SEMANTIC</span>
                 <span className="node-entity font-mono">sales_mv</span>
-                <span className="node-desc">MEASURE(Revenue) & MEASURE(Gross Margin Rate) 统一口径</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? 'MEASURE(Revenue) & MEASURE(Gross Margin Rate) 统一口径'
+                    : language === 'ja'
+                    ? 'MEASURE(Revenue) & MEASURE(Gross Margin Rate) 統一指標定義'
+                    : 'Unified semantic MEASURE(Revenue) & MEASURE(Gross Margin Rate)'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node highlight-lakebase">
                 <span className="node-stage">STAGE 6: LAKEBASE</span>
                 <span className="node-entity font-mono">depot_ops_summary<br/>.revenue / gross_margin_rate</span>
-                <span className="node-desc text-solar font-bold">1.86B CR 总营收 · Ares 批次3缺陷导致粗利降至 31.9%</span>
+                <span className="node-desc text-solar font-bold">
+                  {language === 'zh'
+                    ? '1.86B CR 总营收 · Ares 批次3缺陷导致粗利降至 31.9%'
+                    : language === 'ja'
+                    ? '1.86B CR 総売上高 · Ares ロット3欠陥により粗利率31.9%へ低下'
+                    : '1.86B CR Total Revenue · Ares Batch 3 defects drag gross margin to 31.9%'}
+                </span>
               </div>
             </div>
           </div>
@@ -762,31 +798,61 @@ export const syncFromLakebase = action({
               <div className="pathway-node">
                 <span className="node-stage">STAGE 0: LANDING</span>
                 <span className="node-entity font-mono">orders/*.json</span>
-                <span className="node-desc">每日全系统订单状态变更事件（PLACED, ALLOCATED, SHIPPED...）</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '每日全系统订单状态变更事件（PLACED, ALLOCATED, SHIPPED...）'
+                    : language === 'ja'
+                    ? '全システムの日次注文ステータス変更イベント（PLACED, ALLOCATED, SHIPPED...）'
+                    : 'Daily order lifecycle events across all planetary nodes (PLACED, ALLOCATED, SHIPPED...)'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 2: SILVER</span>
                 <span className="node-entity font-mono">silver_orders<br/>(CDC Merge)</span>
-                <span className="node-desc">MERGE INTO 维护当前最终状态，过滤取消与重发</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? 'MERGE INTO 维护当前最终状态，过滤取消与重发'
+                    : language === 'ja'
+                    ? 'MERGE INTO で最新ステータスを更新、取消・再送レコードを排除'
+                    : 'MERGE INTO keeps terminal state, deduplicating cancellations & resends'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 3: GOLD</span>
                 <span className="node-entity font-mono">fact_orders</span>
-                <span className="node-desc">核算实际交付耗时是否满足星系航线 SLA 承诺</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '核算实际交付耗时是否满足星系航线 SLA 承诺'
+                    : language === 'ja'
+                    ? '惑星間航路ごとのSLA遵守基準と実配送時間を照合'
+                    : 'Evaluates transit durations against interplanetary SLA thresholds'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 4: SEMANTIC</span>
                 <span className="node-entity font-mono">orders_mv</span>
-                <span className="node-desc">MEASURE(On Time Fulfilment Rate) & MEASURE(Cancellation Rate)</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? 'MEASURE(On Time Fulfilment Rate) & MEASURE(Cancellation Rate)'
+                    : language === 'ja'
+                    ? 'MEASURE(On Time Fulfilment Rate) & MEASURE(Cancellation Rate) 統一定義'
+                    : 'Unified MEASURE(On Time Fulfilment Rate) & MEASURE(Cancellation Rate)'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node highlight-lakebase">
                 <span className="node-stage">STAGE 6: LAKEBASE</span>
                 <span className="node-entity font-mono">depot_ops_summary<br/>.orders / on_time_rate</span>
-                <span className="node-desc text-emerald font-bold">13,944 订单 · 全网平均准时率 95.8%</span>
+                <span className="node-desc text-emerald font-bold">
+                  {language === 'zh'
+                    ? '13,944 订单 · 全网平均准时率 95.8%'
+                    : language === 'ja'
+                    ? '13,944 件受注 · 太陽系全体平均オンタイム率 95.8%'
+                    : '13,944 Orders · Global On-Time Delivery Rate 95.8%'}
+                </span>
               </div>
             </div>
           </div>
@@ -799,31 +865,61 @@ export const syncFromLakebase = action({
               <div className="pathway-node">
                 <span className="node-stage">STAGE 0: LANDING</span>
                 <span className="node-entity font-mono">inventory/*.json</span>
-                <span className="node-desc">仓库机器人每次货品入库、出库、调拨流水报文</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '仓库机器人每次货品入库、出库、调拨流水报文'
+                    : language === 'ja'
+                    ? '拠点自律ロボットの入出庫・移管テレメトリ明细'
+                    : 'Raw robotic telemetry packets for item receipts, dispatches, and transfers'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 2: SILVER</span>
                 <span className="node-entity font-mono">silver_inventory</span>
-                <span className="node-desc">窗口累计函数实时计算各仓库 SKU 当前 on_hand 实时存量</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '窗口累计函数实时计算各仓库 SKU 当前 on_hand 实时存量'
+                    : language === 'ja'
+                    ? 'ウィンドウ集計で各拠点・SKUごとの on_hand 実在庫を常時算出'
+                    : 'Window cumulative aggregations maintaining SKU on_hand balances'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 3: GOLD</span>
                 <span className="node-entity font-mono">fact_inventory</span>
-                <span className="node-desc">标记零库存阻断（Stockout Event）与延期欠发订单</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? '标记零库存阻断（Stockout Event）与延期欠发订单'
+                    : language === 'ja'
+                    ? '欠品イベント（Stockout Event）およびバックオーダー保留を検出'
+                    : 'Flags stockout events, zero-inventory locks, and backorders'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node">
                 <span className="node-stage">STAGE 4: SEMANTIC</span>
                 <span className="node-entity font-mono">inventory_mv</span>
-                <span className="node-desc">MEASURE(Stockout Events) & MEASURE(Units Out)</span>
+                <span className="node-desc">
+                  {language === 'zh'
+                    ? 'MEASURE(Stockout Events) & MEASURE(Units Out)'
+                    : language === 'ja'
+                    ? 'MEASURE(Stockout Events) & MEASURE(Units Out) 統一定義'
+                    : 'Curated MEASURE(Stockout Events) & MEASURE(Units Out)'}
+                </span>
               </div>
               <div className="pathway-link">➜</div>
               <div className="pathway-node highlight-lakebase">
                 <span className="node-stage">STAGE 6: LAKEBASE</span>
                 <span className="node-entity font-mono">depot_ops_summary<br/>.stockout_events / units_out</span>
-                <span className="node-desc text-cyan font-bold">186 次缺货阻断 · 出库 110,634 件货品</span>
+                <span className="node-desc text-cyan font-bold">
+                  {language === 'zh'
+                    ? '186 次缺货阻断 · 出库 110,634 件货品'
+                    : language === 'ja'
+                    ? '186 回の欠品阻害 · 総出荷数 110,634 ユニット'
+                    : '186 Stockout Events · 110,634 Units Dispatched'}
+                </span>
               </div>
             </div>
           </div>
@@ -904,26 +1000,94 @@ export const syncFromLakebase = action({
         <div className="comparison-box analytical-box glass-panel">
           <div className="box-title text-cyan">
             <BarChart3 size={18} />
-            <span>{language === 'zh' ? '分析型湖仓架构 (Delta Lake + SQL Warehouse)' : 'Analytical Lakehouse (Delta Lake)'}</span>
+            <span>
+              {language === 'zh'
+                ? '分析型湖仓架构 (Delta Lake + SQL Warehouse)'
+                : language === 'ja'
+                ? '分析型レイクハウス (Delta Lake + SQL Warehouse)'
+                : 'Analytical Lakehouse (Delta Lake + SQL Warehouse)'}
+            </span>
           </div>
           <ul className="comparison-list">
-            <li><strong>存储布局：</strong> 列式存储（Parquet Columnar），仅读取查询所需列；</li>
-            <li><strong>优势：</strong> 海量全表扫描，快速对数百万行订单明细执行宏观聚合；</li>
-            <li><strong>代价：</strong> 每次查询有固定的调度与规划开销（1-2 秒），高频点查浪费算力；</li>
-            <li><strong>典型消费者：</strong> 数据分析师、Genie 智能问答、AI/BI 决策仪表板。</li>
+            <li>
+              <strong>{language === 'zh' ? '存储布局：' : language === 'ja' ? 'ストレージ構造：' : 'Storage Format: '}</strong>
+              {language === 'zh'
+                ? '列式存储（Parquet Columnar），仅读取查询所需列；'
+                : language === 'ja'
+                ? '列指向ストレージ（Parquet Columnar）、クエリに必要な列のみ走査；'
+                : 'Columnar layout (Parquet), pruning unnecessary columns during I/O;'}
+            </li>
+            <li>
+              <strong>{language === 'zh' ? '优势：' : language === 'ja' ? '強み：' : 'Strengths: '}</strong>
+              {language === 'zh'
+                ? '海量全表扫描，快速对数百万行订单明细执行宏观聚合；'
+                : language === 'ja'
+                ? '大規模フルスキャンに対応し、数百万行の明細データを高速に集計・要約；'
+                : 'Massively parallel scans, aggregating millions of raw event rows in seconds;'}
+            </li>
+            <li>
+              <strong>{language === 'zh' ? '代价：' : language === 'ja' ? 'トレードオフ：' : 'Trade-offs: '}</strong>
+              {language === 'zh'
+                ? '每次查询有固定的调度与规划开销（1-2 秒），高频点查浪费算力；'
+                : language === 'ja'
+                ? 'クエリ計画・起動に1〜2秒の固定ラグが生じ、高頻度な点照会には非効率；'
+                : '1-2s query planning/scheduling overhead, inefficient for sub-second point lookups;'}
+            </li>
+            <li>
+              <strong>{language === 'zh' ? '典型消费者：' : language === 'ja' ? '主な利用者：' : 'Primary Consumers: '}</strong>
+              {language === 'zh'
+                ? '数据分析师、Genie 智能问答、AI/BI 决策仪表板。'
+                : language === 'ja'
+                ? 'データアナリスト、Genie AI質問応答、全社BIダッシュボード。'
+                : 'Data Analysts, Genie AI, Executive BI Dashboards.'}
+            </li>
           </ul>
         </div>
 
         <div className="comparison-box operational-box glass-panel">
           <div className="box-title text-emerald">
             <Server size={18} />
-            <span>{language === 'zh' ? '在线操作型服务架构 (Lakebase Postgres + Convex)' : 'Operational Serving (Lakebase Postgres)'}</span>
+            <span>
+              {language === 'zh'
+                ? '在线操作型服务架构 (Lakebase Postgres + Convex)'
+                : language === 'ja'
+                ? '運用型サービング基盤 (Lakebase Postgres + Convex)'
+                : 'Operational Serving (Lakebase Postgres + Convex)'}
+            </span>
           </div>
           <ul className="comparison-list">
-            <li><strong>存储布局：</strong> 行式存储（Row-Oriented Heap + B-Tree 索引）；</li>
-            <li><strong>优势：</strong> 毫秒级按主键点查（Keyed Lookups），仅触碰几个数据页；</li>
-            <li><strong>代价：</strong> 不适合用来对全量海量明细进行分析计算，因此仅同步预聚合切片；</li>
-            <li><strong>典型消费者：</strong> 现场仓库主管、Helios 在线运营大屏、高并发 Web 应用。</li>
+            <li>
+              <strong>{language === 'zh' ? '存储布局：' : language === 'ja' ? 'ストレージ構造：' : 'Storage Format: '}</strong>
+              {language === 'zh'
+                ? '行式存储（Row-Oriented Heap + B-Tree 索引）；'
+                : language === 'ja'
+                ? '行指向ストレージ（Heap + B-Tree インデックス）；'
+                : 'Row-oriented heap with high-concurrency B-Tree indexes;'}
+            </li>
+            <li>
+              <strong>{language === 'zh' ? '优势：' : language === 'ja' ? '強み：' : 'Strengths: '}</strong>
+              {language === 'zh'
+                ? '毫秒级按主键点查（Keyed Lookups），仅触碰几个数据页；'
+                : language === 'ja'
+                ? '主キー検索（Keyed Lookups）をミリ秒単位で処理し、最小限のページ参照で即答；'
+                : 'Sub-second keyed lookups fetching single records with minimal disk page touches;'}
+            </li>
+            <li>
+              <strong>{language === 'zh' ? '代价：' : language === 'ja' ? 'トレードオフ：' : 'Trade-offs: '}</strong>
+              {language === 'zh'
+                ? '不适合用来对全量海量明细进行分析计算，因此仅同步预聚合切片；'
+                : language === 'ja'
+                ? '生明細の巨大集計には不向きなため、事前集計済みスライスのみを同期；'
+                : 'Not suited for deep aggregate scans across raw history; limited to pre-aggregated slices;'}
+            </li>
+            <li>
+              <strong>{language === 'zh' ? '典型消费者：' : language === 'ja' ? '主な利用者：' : 'Primary Consumers: '}</strong>
+              {language === 'zh'
+                ? '现场仓库主管、Helios 在线运营大屏、高并发 Web 应用。'
+                : language === 'ja'
+                ? '現場拠点オペレーター、Helios リアルタイム運用コンソール、高並行Webアプリ。'
+                : 'On-site Depot Supervisors, Helios Live Ops Console, Low-latency Web Apps.'}
+            </li>
           </ul>
         </div>
       </div>

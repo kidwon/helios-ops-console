@@ -160,51 +160,51 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
   // Astronomical and orbital physics telemetry for the 6 celestial depots
   const CELESTIAL_TELEMETRY: Record<string, {
     distanceAu: string;
-    distanceKm: string;
+    distanceKm: { zh: string; en: string; ja: string };
     commDelay: { zh: string; en: string; ja: string };
-    orbitalSpeed: string;
+    orbitalSpeed: { zh: string; en: string; ja: string };
     radiationLevel: { zh: string; en: string; ja: string };
   }> = {
     'DEP-01': {
       distanceAu: '1.00 AU',
-      distanceKm: '1.49 亿 km',
+      distanceKm: { zh: '1.49 亿 km', en: '149.6M km', ja: '1.49 億 km' },
       commDelay: { zh: '1.28 秒 (地月双向激光)', en: '1.28 s (Earth-Moon Laser)', ja: '1.28秒 (地月レーザー)' },
-      orbitalSpeed: '29.78 km/s',
+      orbitalSpeed: { zh: '29.78 km/s', en: '29.78 km/s', ja: '29.78 km/s' },
       radiationLevel: { zh: 'LOW (地磁场屏蔽)', en: 'LOW (Magnetosphere Shielded)', ja: 'LOW (地磁気遮蔽)' }
     },
     'DEP-02': {
       distanceAu: '1.00 AU',
-      distanceKm: '1.50 亿 km (月球 L2)',
+      distanceKm: { zh: '1.50 亿 km (月球 L2)', en: '150.0M km (Lunar L2)', ja: '1.50 億 km (月面 L2)' },
       commDelay: { zh: '1.34 秒 (火卫/月球中继)', en: '1.34 s (Lagrange L2 Relay)', ja: '1.34秒 (中継通信)' },
-      orbitalSpeed: '1.02 km/s (绕月轨道)',
+      orbitalSpeed: { zh: '1.02 km/s (绕月轨道)', en: '1.02 km/s (Lunar Orbit)', ja: '1.02 km/s (月周回軌道)' },
       radiationLevel: { zh: 'MOD (深层玄武岩屏蔽)', en: 'MOD (Regolith Vault)', ja: 'MOD (地下遮蔽)' }
     },
     'DEP-03': {
       distanceAu: '1.52 AU',
-      distanceKm: '2.28 亿 km',
+      distanceKm: { zh: '2.28 亿 km', en: '227.9M km', ja: '2.28 億 km' },
       commDelay: { zh: '14.2 分钟 (单向光延迟)', en: '14.2 min (One-Way Light Delay)', ja: '14.2分 (片道光遅延)' },
-      orbitalSpeed: '24.07 km/s',
+      orbitalSpeed: { zh: '24.07 km/s', en: '24.07 km/s', ja: '24.07 km/s' },
       radiationLevel: { zh: 'ELEVATED (稀薄大气强辐射)', en: 'ELEVATED (Thin Atmosphere)', ja: 'ELEVATED (高放射線)' }
     },
     'DEP-04': {
       distanceAu: '2.77 AU',
-      distanceKm: '4.14 亿 km',
+      distanceKm: { zh: '4.14 亿 km', en: '414.0M km', ja: '4.14 億 km' },
       commDelay: { zh: '23.1 分钟 (小行星带漫射)', en: '23.1 min (Belt Penetration)', ja: '23.1分 (小惑星帯遅延)' },
-      orbitalSpeed: '17.88 km/s',
+      orbitalSpeed: { zh: '17.88 km/s', en: '17.88 km/s', ja: '17.88 km/s' },
       radiationLevel: { zh: 'HIGH (无磁场/微陨石带)', en: 'HIGH (Micrometeorite Hazard)', ja: 'HIGH (微小隕石帯)' }
     },
     'DEP-05': {
       distanceAu: '5.20 AU',
-      distanceKm: '7.78 亿 km',
+      distanceKm: { zh: '7.78 亿 km', en: '778.5M km', ja: '7.78 億 km' },
       commDelay: { zh: '43.3 分钟 (木星极端磁暴)', en: '43.3 min (Jovian Magnetosphere)', ja: '43.3分 (木星磁気嵐)' },
-      orbitalSpeed: '13.07 km/s',
+      orbitalSpeed: { zh: '13.07 km/s', en: '13.07 km/s', ja: '13.07 km/s' },
       radiationLevel: { zh: 'CRITICAL (木星超重辐射带)', en: 'CRITICAL (Radiation Belt)', ja: 'CRITICAL (極大放射線)' }
     },
     'DEP-06': {
       distanceAu: '9.58 AU',
-      distanceKm: '14.33 亿 km',
+      distanceKm: { zh: '14.33 亿 km', en: '1,433M km', ja: '14.33 億 km' },
       commDelay: { zh: '79.8 分钟 (深空极度延迟)', en: '79.8 min (Deep Space Delay)', ja: '79.8分 (深宇宙極大遅延)' },
-      orbitalSpeed: '9.68 km/s',
+      orbitalSpeed: { zh: '9.68 km/s', en: '9.68 km/s', ja: '9.68 km/s' },
       radiationLevel: { zh: 'LOW (浓密氮甲烷屏蔽)', en: 'LOW (Dense Atmosphere)', ja: 'LOW (濃厚大気遮蔽)' }
     }
   };
@@ -227,7 +227,13 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
         <div className="world-hero-content">
           <div className="world-hero-badge">
             <Orbit size={14} className="text-cyan animate-spin-slow" />
-            <span className="font-mono">SIMULATION UNIVERSE DOSSIER // 太阳系贸易模拟系统世界观档案</span>
+            <span className="font-mono">
+              {language === 'zh'
+                ? 'SIMULATION UNIVERSE DOSSIER // 太阳系贸易模拟系统世界观档案'
+                : language === 'ja'
+                ? 'SIMULATION UNIVERSE DOSSIER // 太陽系貿易シミュレーション世界観アーカイブ'
+                : 'SIMULATION UNIVERSE DOSSIER // SOLAR COMMERCE SIMULATION ARCHIVES'}
+            </span>
           </div>
 
           <h1 className="world-hero-title">
@@ -258,22 +264,30 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
             <div className="metric-pill">
               <span className="pill-dot bg-cyan" />
               <span className="pill-num">6</span>
-              <span className="pill-txt">{language === 'zh' ? '大天体物流枢纽' : 'Planetary Depots'}</span>
+              <span className="pill-txt">
+                {language === 'zh' ? '大天体物流枢纽' : language === 'ja' ? '大天体物流拠点' : 'Planetary Depots'}
+              </span>
             </div>
             <div className="metric-pill">
               <span className="pill-dot bg-purple" />
               <span className="pill-num">10</span>
-              <span className="pill-txt">{language === 'zh' ? '类源头异构数据流' : 'Upstream Data Feeds'}</span>
+              <span className="pill-txt">
+                {language === 'zh' ? '类源头异构数据流' : language === 'ja' ? '種の上流異種データソース' : 'Upstream Data Feeds'}
+              </span>
             </div>
             <div className="metric-pill">
               <span className="pill-dot bg-emerald" />
               <span className="pill-num">0</span>
-              <span className="pill-txt">{language === 'zh' ? '指标口径漂移 (Zero Drift)' : 'Zero Metric Drift'}</span>
+              <span className="pill-txt">
+                {language === 'zh' ? '指标口径漂移 (Zero Drift)' : language === 'ja' ? '指標乖離ゼロ (Zero Drift)' : 'Zero Metric Drift'}
+              </span>
             </div>
             <div className="metric-pill">
               <span className="pill-dot bg-solar" />
               <span className="pill-num">&lt; 10ms</span>
-              <span className="pill-txt">{language === 'zh' ? 'Lakebase 点查延迟' : 'Lakebase Latency'}</span>
+              <span className="pill-txt">
+                {language === 'zh' ? 'Lakebase 点查延迟' : language === 'ja' ? 'Lakebase 照会遅延' : 'Lakebase Latency'}
+              </span>
             </div>
           </div>
         </div>
@@ -323,10 +337,16 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
           <div className="title-left">
             <Globe size={18} className="text-cyan" />
             <h2 className="section-title">
-              {language === 'zh' ? '太阳系全天候雷达 · 六大核心天体物流枢纽' : 'Solar Planetary Radar & 6 Core Depot Dossiers'}
+              {language === 'zh' 
+                ? '太阳系全天候雷达 · 六大核心天体物流枢纽' 
+                : language === 'ja' 
+                ? '太陽系全天候レーダー · 主要6天体物流拠点' 
+                : 'Solar Planetary Radar & 6 Core Depot Dossiers'}
             </h2>
           </div>
-          <span className="section-tag font-mono">ORBITAL SENSORS // 6 DEPOTS DEPLOYED</span>
+          <span className="section-tag font-mono">
+            {language === 'zh' ? '轨道传感器 // 6 大基地在线' : language === 'ja' ? '軌道センサー // 6拠点配備' : 'ORBITAL SENSORS // 6 DEPOTS DEPLOYED'}
+          </span>
         </div>
 
         {/* Tactical Cockpit Split Layout: Radar Main Deck + Orbital Telemetry Inspector */}
@@ -341,7 +361,7 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
               <div className="inspector-header">
                 <div className="inspector-live-tag font-mono">
                   <span className="inspector-radar-dot" />
-                  <span>{language === 'zh' ? '天体实时遥测侦测台' : 'ORBITAL TELEMETRY'}</span>
+                  <span>{language === 'zh' ? '天体实时遥测侦测台' : language === 'ja' ? '天体リアルタイム・テレメトリ監視台' : 'ORBITAL TELEMETRY'}</span>
                 </div>
                 <div className="inspector-depot-switcher">
                   {switcherDepots.map(dep => (
@@ -376,21 +396,31 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
 
               <div className="inspector-physics-grid font-mono">
                 <div className="physics-item">
-                  <span className="physics-lbl">{language === 'zh' ? '日心距离' : 'SOL DISTANCE'}</span>
+                  <span className="physics-lbl">
+                    {language === 'zh' ? '日心距离' : language === 'ja' ? '日心距離' : 'SOL DISTANCE'}
+                  </span>
                   <span className="physics-val">{focusedTelemetry.distanceAu}</span>
                 </div>
                 <div className="physics-item">
-                  <span className="physics-lbl">{language === 'zh' ? '光速通讯延迟' : 'COMM DELAY'}</span>
+                  <span className="physics-lbl">
+                    {language === 'zh' ? '光速通讯延迟' : language === 'ja' ? '光速通信遅延' : 'COMM DELAY'}
+                  </span>
                   <span className="physics-val">
                     {language === 'zh' ? focusedTelemetry.commDelay.zh : language === 'ja' ? focusedTelemetry.commDelay.ja : focusedTelemetry.commDelay.en}
                   </span>
                 </div>
                 <div className="physics-item">
-                  <span className="physics-lbl">{language === 'zh' ? '公转线速度' : 'ORBITAL VEL'}</span>
-                  <span className="physics-val">{focusedTelemetry.orbitalSpeed}</span>
+                  <span className="physics-lbl">
+                    {language === 'zh' ? '公转线速度' : language === 'ja' ? '公転速度' : 'ORBITAL VEL'}
+                  </span>
+                  <span className="physics-val">
+                    {language === 'zh' ? focusedTelemetry.orbitalSpeed.zh : language === 'ja' ? focusedTelemetry.orbitalSpeed.ja : focusedTelemetry.orbitalSpeed.en}
+                  </span>
                 </div>
                 <div className="physics-item">
-                  <span className="physics-lbl">{language === 'zh' ? '辐射防护评级' : 'RADIATION'}</span>
+                  <span className="physics-lbl">
+                    {language === 'zh' ? '辐射防护评级' : language === 'ja' ? '放射線防護' : 'RADIATION'}
+                  </span>
                   <span className="physics-val text-amber">
                     {language === 'zh' ? focusedTelemetry.radiationLevel.zh : language === 'ja' ? focusedTelemetry.radiationLevel.ja : focusedTelemetry.radiationLevel.en}
                   </span>
@@ -402,11 +432,11 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
                   {language === 'zh' ? focusedLore.roleZh : language === 'ja' ? focusedLore.roleJa : focusedLore.roleEn}
                 </p>
                 <div className="inspector-cargo-row font-mono">
-                  <span className="text-muted">📦 {language === 'zh' ? '核心品类:' : 'CARGO:'}</span>
+                  <span className="text-muted">📦 {language === 'zh' ? '核心品类:' : language === 'ja' ? '主要品目:' : 'CARGO:'}</span>
                   <span className="text-cyan font-semibold">{focusedLore.primaryCargo}</span>
                 </div>
                 <div className="inspector-hazard-row font-mono">
-                  <span className="text-muted">⚠️ {language === 'zh' ? '工况告警:' : 'HAZARD:'}</span>
+                  <span className="text-muted">⚠️ {language === 'zh' ? '工况告警:' : language === 'ja' ? '環境リスク:' : 'HAZARD:'}</span>
                   <span className="text-amber">
                     {language === 'zh' ? focusedLore.hazardZh : language === 'ja' ? focusedLore.hazardJa : focusedLore.hazardEn}
                   </span>
@@ -415,17 +445,17 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
 
               <div className="inspector-kpi-summary font-mono">
                 <div className="kpi-mini-col">
-                  <span className="kpi-mini-lbl">{language === 'zh' ? '总营收' : 'REVENUE'}</span>
+                  <span className="kpi-mini-lbl">{language === 'zh' ? '总营收' : language === 'ja' ? '総売上' : 'REVENUE'}</span>
                   <span className="kpi-mini-val text-solar">{formatCredits(activeFocusedDepot.revenue)}</span>
                 </div>
                 <div className="kpi-mini-col">
-                  <span className="kpi-mini-lbl">{language === 'zh' ? '毛利率' : 'MARGIN'}</span>
+                  <span className="kpi-mini-lbl">{language === 'zh' ? '毛利率' : language === 'ja' ? '粗利率' : 'MARGIN'}</span>
                   <span className={`kpi-mini-val ${activeFocusedDepot.gross_margin_rate < 0.3 ? 'text-crimson' : 'text-emerald'}`}>
                     {formatPercent(activeFocusedDepot.gross_margin_rate, 1)}
                   </span>
                 </div>
                 <div className="kpi-mini-col">
-                  <span className="kpi-mini-lbl">{language === 'zh' ? '准时率' : 'SLA'}</span>
+                  <span className="kpi-mini-lbl">{language === 'zh' ? '准时率' : language === 'ja' ? 'SLA准時率' : 'SLA'}</span>
                   <span className="kpi-mini-val text-cyan">{formatPercent(activeFocusedDepot.on_time_rate, 1)}</span>
                 </div>
               </div>
@@ -438,7 +468,7 @@ export const WorldLoreView: React.FC<WorldLoreViewProps> = ({ onViewChange, onSc
                   handleOpenDepotDetail(activeFocusedDepot);
                 }}
               >
-                <span>{language === 'zh' ? '查看该枢纽三维全息档案' : 'Inspect Holographic 3D Dossier'}</span>
+                <span>{language === 'zh' ? '查看该枢纽三维全息档案' : language === 'ja' ? 'この拠点の3Dホログラフィック档案を閲覧' : 'Inspect Holographic 3D Dossier'}</span>
                 <ChevronRight size={14} />
               </button>
             </div>

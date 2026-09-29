@@ -24,13 +24,70 @@ export const DepotDetailModal: React.FC<DepotDetailModalProps> = ({
   onClose,
   onOpenRebalance
 }) => {
-  const { toggleAresMarginIncident, t, translateBody } = useHeliosData();
+  const { toggleAresMarginIncident, t, translateBody, language } = useHeliosData();
 
   if (!depot) return null;
 
   const statusStyle = getStatusStyle(depot.status_alert);
   const regionStyle = getRegionColor(depot.depot_region);
   const isAresIncident = depot.warehouse_id === 'DEP-03';
+
+  const getLocalizedIncidentNote = (d: DepotRecord) => {
+    if (d.warehouse_id === 'DEP-03') {
+      if (d.gross_margin_rate < 0.35) {
+        return language === 'zh'
+          ? '火星 Ares 仓库由于批次 3 推进器供应商故障事件（SUP-11），毛利率拖累至 31.9%。'
+          : language === 'ja'
+          ? '火星 Ares 拠点はロット3推進器サプライヤー（SUP-11）障害により、粗利率が31.9%に低下。'
+          : 'Ares margin dragged down by Batch 3 propulsion supplier incident (SUP-11).';
+      }
+      return language === 'zh'
+        ? 'Ares 火星基地高负载运转中，毛利率稳定在 37.6% 预期区间。'
+        : language === 'ja'
+        ? 'Ares 火星拠点は高負荷稼働中、粗利率37.6%の安定水準を維持。'
+        : 'Ares Depot operating at high capacity; gross margin sustained at 37.6%.';
+    }
+    if (d.warehouse_id === 'DEP-01') {
+      return language === 'zh'
+        ? 'Helios 总部月球旗舰仓储设施，保持 41.1% 稳健毛利率。'
+        : language === 'ja'
+        ? 'Helios 本社月面フラッグシップ拠点、41.1%の堅調な粗利率を維持。'
+        : 'Helios headquarters lunar facility with solid 41.1% margin.';
+    }
+    if (d.warehouse_id === 'DEP-02') {
+      return language === 'zh'
+        ? '太阳系核心地选中转主枢纽，当前运行保持 0 缺货记录。'
+        : language === 'ja'
+        ? '太陽系中核ハブ、現在欠品ゼロの完全稼働を記録中。'
+        : 'Primary Sol transshipment terminal with zero stockouts recorded.';
+    }
+    if (d.warehouse_id === 'DEP-04') {
+      return language === 'zh'
+        ? '小行星带矿区开采走廊运转，维持 42.6% 优良毛利率。'
+        : language === 'ja'
+        ? '小惑星帯採掘回廊での中継拠点、42.6%の安定した粗利率を維持。'
+        : 'Asteroid mining corridor operations with robust 42.6% gross margin.';
+    }
+    if (d.warehouse_id === 'DEP-05') {
+      return language === 'zh'
+        ? '木星强磁层高能辐射干扰导致 12 次补货调拨出现排队滞后。'
+        : language === 'ja'
+        ? '木星磁気圏の電波障害により12件の補充再配分に遅延が発生。'
+        : 'Jovian magnetic interference impacted 12 stockout rebalances.';
+    }
+    if (d.warehouse_id === 'DEP-06') {
+      return language === 'zh'
+        ? '土星远深空系统轨道航行延迟，准时交付率降至 46.0%。'
+        : language === 'ja'
+        ? '土星深宇宙軌道の輸送遅延により、定時履行率が46.0%に低下。'
+        : 'Saturn system orbital transport delay; on-time rate down to 46.0%.';
+    }
+    return language === 'zh'
+      ? '所有转运码头与自动化起重机均在 SLA 承诺指标内正常运作。'
+      : language === 'ja'
+      ? 'すべての積み替えドックと自律クレーンはSLA基準内で正常稼働中。'
+      : 'All transshipment arrays and automated cranes operate inside SLA.';
+  };
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
@@ -80,7 +137,7 @@ export const DepotDetailModal: React.FC<DepotDetailModalProps> = ({
                   {t.systemStatusLabel}: {depot.status_alert}
                 </span>
                 <p className="alert-banner-desc">
-                  {depot.incident_note || 'All transshipment arrays and automated cranes operate inside SLA.'}
+                  {getLocalizedIncidentNote(depot)}
                 </p>
               </div>
             </div>
