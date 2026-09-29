@@ -10,8 +10,11 @@ import {
   ShoppingBag, 
   AlertTriangle, 
   SendHorizontal, 
-  CheckCircle2 
+  CheckCircle2,
+  Clock
 } from 'lucide-react';
+
+const cleanLabel = (text: string) => text.replace(/[:：]\s*$/, '');
 
 interface DepotDetailModalProps {
   depot: DepotRecord | null;
@@ -172,21 +175,21 @@ export const DepotDetailModal: React.FC<DepotDetailModalProps> = ({
                 <span>{t.financialPerformance}</span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.netRevenue}</span>
+                <span className="matrix-label">{cleanLabel(t.netRevenue)}</span>
                 <span className="matrix-value text-solar font-mono">{formatCredits(depot.revenue)}</span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.grossMargin}:</span>
+                <span className="matrix-label">{cleanLabel(t.grossMargin)}</span>
                 <span className="matrix-value font-mono">{formatCredits(depot.gross_margin)}</span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.colMargin}:</span>
+                <span className="matrix-label">{cleanLabel(t.colMargin)}</span>
                 <span className={`matrix-value font-mono font-bold ${depot.gross_margin_rate < 0.3 ? 'text-crimson' : 'text-emerald'}`}>
                   {formatPercent(depot.gross_margin_rate, 2)}
                 </span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.totalUnitsSold}</span>
+                <span className="matrix-label">{cleanLabel(t.totalUnitsSold)}</span>
                 <span className="matrix-value font-mono">{formatNumber(depot.units_sold)}</span>
               </div>
             </div>
@@ -198,21 +201,21 @@ export const DepotDetailModal: React.FC<DepotDetailModalProps> = ({
                 <span>{t.orderFulfillmentMetrics}</span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.totalOrdersProcessed}</span>
+                <span className="matrix-label">{cleanLabel(t.totalOrdersProcessed)}</span>
                 <span className="matrix-value font-mono">{formatNumber(depot.orders)}</span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.unitsShippedOut}</span>
+                <span className="matrix-label">{cleanLabel(t.unitsShippedOut)}</span>
                 <span className="matrix-value font-mono">{formatNumber(depot.units_out)}</span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.cancellationRate}</span>
+                <span className="matrix-label">{cleanLabel(t.cancellationRate)}</span>
                 <span className={`matrix-value font-mono ${depot.cancellation_rate > 0.03 ? 'text-amber' : 'text-emerald'}`}>
                   {formatPercent(depot.cancellation_rate, 2)}
                 </span>
               </div>
               <div className="matrix-row">
-                <span className="matrix-label">{t.onTimeRate}</span>
+                <span className="matrix-label">{cleanLabel(t.onTimeRate)}</span>
                 <span className={`matrix-value font-mono font-bold ${depot.on_time_rate < 0.93 ? 'text-amber' : 'text-emerald'}`}>
                   {formatPercent(depot.on_time_rate, 2)}
                 </span>
@@ -223,29 +226,31 @@ export const DepotDetailModal: React.FC<DepotDetailModalProps> = ({
           {/* Operational Health & Risks */}
           <div className="modal-risk-row">
             <div className="risk-metric glass-panel">
-              <span className="risk-label">{t.uplinkReliability}</span>
+              <span className="risk-label">{cleanLabel(t.uplinkReliability)}</span>
               <div className="risk-val-row">
-                <Wifi size={14} className="text-cyan" />
-                <span className="risk-value font-mono">{formatPercent(depot.uplink_reliability)}</span>
+                <Wifi size={16} className="text-cyan" />
+                <span className="risk-value font-mono text-cyan">{formatPercent(depot.uplink_reliability)}</span>
               </div>
               <span className="risk-sub">{t.quantumLinkActive}</span>
             </div>
 
             <div className="risk-metric glass-panel">
-              <span className="risk-label">{t.backorders}</span>
+              <span className="risk-label">{cleanLabel(t.backorders)}</span>
               <div className="risk-val-row">
-                <span className={`risk-value font-mono ${depot.backordered_orders > 200 ? 'text-amber' : ''}`}>
-                  {depot.backordered_orders}
+                <Clock size={16} className="text-amber" />
+                <span className={`risk-value font-mono ${depot.backordered_orders > 200 ? 'text-amber' : 'text-slate-100'}`}>
+                  {depot.backordered_orders.toLocaleString()}
                 </span>
               </div>
               <span className="risk-sub">{t.pendingCarrier}</span>
             </div>
 
             <div className="risk-metric glass-panel">
-              <span className="risk-label">{t.stockouts}</span>
+              <span className="risk-label">{cleanLabel(t.stockouts)}</span>
               <div className="risk-val-row">
-                <span className={`risk-value font-mono ${depot.stockout_events > 30 ? 'text-crimson' : 'text-emerald'}`}>
-                  {depot.stockout_events}
+                <AlertTriangle size={16} className={depot.stockout_events > 30 ? 'text-crimson' : 'text-emerald'} />
+                <span className={`risk-value font-mono ${depot.stockout_events > 30 ? 'text-crimson font-bold' : 'text-emerald'}`}>
+                  {depot.stockout_events.toLocaleString()}
                 </span>
               </div>
               <span className="risk-sub">{t.zeroInventoryBlock}</span>
